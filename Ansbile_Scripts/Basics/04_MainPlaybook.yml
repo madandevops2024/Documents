@@ -1,0 +1,12 @@
+---
+- name: This is a declarative format
+  hosts: dev
+  become: yes
+  tasks:
+    - import_tasks: copyTask.yml
+
+- name: Install Git
+  hosts: dev
+  become: yes
+  tasks:
+    - import_tasks: InstallGit.yml

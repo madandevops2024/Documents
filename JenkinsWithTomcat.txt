@@ -1,0 +1,71 @@
+Web Servers:
+IIS - wwwroot
+Apache - /www/html/
+Tomcat - /webapps
+
+Apache Tomcat Server
+----------------------
+#Tomcat is Web Server
+#Apache Tomcat is used to deploy Java Web Applications.
+#Apache Tocat run on Port Number: 8080 (server.xml file , in this file we can modify port number)
+#Tomcat server is oper source => free software
+==========================
+1. Create Amazon Linux EC2 Instance
+2. Install Java -> 
+$sudo -i
+$yum install java
+
+3)Download Tomcat Webserver 9:
+https://tomcat.apache.org/download-90.cgi
+OR 
+Search with "tomcat download"
+
+$wget <url>
+$wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.87/bin/apache-tomcat-9.0.87.tar.gz
+
+4)After download , unzip the tar file.
+$tar -xvf <tar file  name>
+
+5) By default the Host Manager (of Tomcat WebServer) is only accessible from a browser running on the same machine as Tomcat.
+If you want to modify this restriction, we have to edit the host Manager's context fiile.
+
+$cd apache-tomcat-9.0.87/webapps/manager/META-INF
+$vi context.xml
+
+Modify as below in the context.xml file. Change the <Value> section.
+
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow=".*" />
+		 
+		 
+6)Add roles to the tomcat-users.xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="admin-gui"/>
+
+<user username="admin" password="admin" roles="manager-gui, manager-script, admin-gui"/>
+<user username="tomcat" password="dev0ps" roles="manager-gui"/>
+
+7) Install "Deploy to Container" plugin
+Click on-> Manage Jenkins -> Plugins -> Installed Plugins -> Search with "deploy to container"
+
+7)Build the project and Copy war file path :
+Ex:
+target/shopping-site-web-app.war
+
+8)Select the Tomcar Server 9.x from the available list in "Container"
+9)Add your tomcat credentials
+10)Give tomcat url ie., https://<public ip>:8080
+11)Apply & Save
+================================
+How to integrate WebHook with Jenkins:
+
+1)Select option "GitHub hook trigger for GITScm polling"
+2)Get the payload url so that we can use it in Github repository to connect the Github with Jenkins
+a) Manage Jenkins -> System ->  Scroll down until we see GitHub option
+b) Select 'Advanced' -> select 'Specify another hook URL for GitHub configuration'
+c) copy the the payload url
+
+3) Goto Github -> select our repository -> select settings -> select 'WebHook' -> Click on 'Add Webhook' -> paste the payload url
+4)Change 'Content Type' -> application/json
+5)Click on 'Add Webhook'

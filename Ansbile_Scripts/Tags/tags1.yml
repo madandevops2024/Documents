@@ -1,0 +1,22 @@
+---
+- name: Usuage of tags in a playbook
+  hosts: dev
+  become: yes
+  tasks:
+    - copy: 
+        src: /etc/shadow
+        dest: /tmp
+      tags: dev-team
+    
+    - file:
+        path: /tmp/azure
+        state: directory
+      tags: qa-team
+
+    - yum:
+        name: git
+        state: present
+        update_cache: yes
+      tags: prod-team
+
+#ex: ansible-playbook tags1.yml --tags=dev-team

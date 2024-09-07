@@ -1,0 +1,26 @@
+AWS Virtual Private Cloud (Virtual Data Center on the Cloud)
+=============================
+Physical Data center 
+
+
+Minimum  octet value will be 0 and maximum will be 255
+
+172.43.34.45 - Octet -8 
+
+Bit can be 1 or 0
+
+Each octet contains 8 bits
+
+8 bits * 4 octets = 32 bits
+
+8 bits * 3 octets = 24 bits
+
+128 64  32  16  8   4   2   1
+1 	0 	1 	0 	1 	1 	0 	0
+2^7 2^6 2^5 2^4 2^3 2^2 2^1 2^0
+
+11111111
+
+In Class A: First octet is reserved for Network Id
+Remaining 3 octets are for Host Id.
+Max IP addresses we can create in Class A: 16777216

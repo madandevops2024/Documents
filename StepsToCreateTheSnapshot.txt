@@ -1,0 +1,20 @@
+Snapshot
+=========
+
+1) Create Windows Server
+2) Create a volume D and add some data
+3) Volume D should not be deleted
+4) Convert the volume to a Snapshot
+5) Delete the volume because we have taken a snapshot of it.
+6) Delete this Windows Server
+7) After 6 months, deveopers team ask us to attach that volume which contains data.
+8) Create another Windows Server
+10) Convert the Snapshot to a volume
+11) Now after volume is in Available state only then delete the Snapshot.
+12) Attach the volume to the Windows Server
+13) Start Server Manager and bring the volume online
+14) We should able to see the D drive with data
+
+
+
+EBS

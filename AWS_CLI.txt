@@ -1,0 +1,13 @@
+AWS CLI (Command Line Interface)
+-----------------------------------
+AWS provides two ways of infrastructure configuration.
+
+1) AWS Management Web Console
+2) AWS CLI (Command Line Interface)
+
+Using the AWS Web console:
+-------------------------------
+It is a graphical method to connect to various AWS resources, their configuration, modification etc . It is simple to use and does not require knowledge of APIs (Application Programming Interface).
+
+AWS Command Line Interface
+------------------------------

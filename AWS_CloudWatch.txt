@@ -1,0 +1,26 @@
+Amazon CloudWatch
+===================
+
+Amazon CloudWatch is a component of Amazon Web Services.
+It will continously monitor the resources and the application deployed in these servers.
+
+CloudWatch enables real-time monitoring of AWS resources such as EC2 instances, Elastic Block Store(Volumes), Load Balancer, Relational Database Service (RDS) instances.
+
+======================================================
+Install a software called, 'stress' to increase the CPU utilization.
+
+$sudo yum install stress -y
+$sudo stress --cpu 8 -v --timeout 180s
+
+=====================
+Elastic IP
+---------------
+13.201.69.151 
+65.0.204.196
+
+13.232.219.124 EIP
+13.232.219.124
+13.232.219.124
+
+3.108.223.109
+DHCP -> Dynamic Host Configuration Protocol

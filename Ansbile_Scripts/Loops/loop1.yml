@@ -1,0 +1,13 @@
+---
+- name: Usuage of loops
+  hosts: all
+  become: yes
+  tasks:
+    - copy:
+        src: "{{ item }}"
+        dest: /tmp/
+      with_items:
+        - /etc/passwd
+        - /etc/shadow
+        - /etc/fstab
+        - /etc/group

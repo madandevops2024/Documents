@@ -1,0 +1,55 @@
+Terraform
+==========
+AWS:  Cloudformation
+GCP: Google Cloud Deployment Manager (CDM)
+Azure: Azure Resource Manager Templates (ARM Templates)
+
+#Terraform is called as a 'Infrastructure As A Code' (IAAC)
+
+#Terraform is an open source software created by HasiCorp and written in Go Language
+
+#Terraform is an Infrastructure as a code software tool
+
+#Infrastructure as code is the process of managing the infrastructure in a file or multiple files rather than manually configuring the resources using thhe AWS or cloud user interface
+
+#Terraform code is written in the HasiCorp Configuration Language (HCL) in the files with extension ".tf"
+
+#Terraform allows users to use HCL to create the files containing the definations of the resources which we want to be created on the cloud.
+======================================================================
+
+Terraform Installation
+--------------------------
+sudo yum install -y yum-utils shadow-utils
+
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+
+sudo yum -y install terraform
+
+
+terraform -v
+============================
+1)terraform init => Initialize the terraform using init
+2)terraform fmt => Formats our HCL script 
+3)terraform validate => Validates the HCL script
+4)terraform plan => Just like dry run,it will show us the execution plan
+5)terraform apply => Creates the infrastructure
+terraform apply -auto-approve
+
+When the HCL script got executed, it will store the state in a file i.e., terraform.tfstate. If we execute the HCL script again , it will not create the infrastructure. But if we delete the state file, which is not recommended, and execute the script again, then the infrastructure will be created.
+
+6)terraform destroy => Terminates all the resources created on the cloud
+terraform destroy -auto-approve
+===========================================
+Variables:
+------------
+1)string => Ex: a = 'test'
+2)number => Ex: a = 10
+3)list => Ex: a = ['one','two','three'], a = [1,2,3]
+4)map => Ex: "key"= "value"
+------------------------------------
+Input, Output and Local Variables
+-------------------------------------
+To print a sensitive value:
+terraform output Instance_arn
+
+

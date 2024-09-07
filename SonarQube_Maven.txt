@@ -1,0 +1,174 @@
+SonarQube
+============
+
+10 instructions 
+Loosely coupled , should not be tightly coupled
+
+30+ Languages
+
+Static Code Analysis Tool
+Veracode
+Coverity
+CodeScene
+etc
+
+#SonarQube is a continous code quality checking tool
+#We can do code review using SonarQube Tool
+#SonarQube will generate a code review report and we will send this report to Developers. Accordingly the Developers will take actions as per the report.
+======================================================
+Code Coverage
+--------------
+How many lines of source code is tested by unit test cases
+In Java, JUnit
+In .Net, NUnit
+========================
+
+Maven is build
+Maven is a Repository tool:
+
+Maven Repository has 3 different types of repositories:
+1) Central Repository
+2) Remote Repository -> Nexus or JFrog 
+3) Local Repository -> root/.m2/repository
+users/local/.m2/repository
+
+maven goals:
+clean package
+
+target/*.war
+
+test -> 
+compile -> It converts a .java file to .class (Bytecode)
+deploy
+
+Dependencies -> Plugins -> Softwares
+
+=========================
+Install Maven
+-------------
+1)Install Java:
+yum install java-17-amazon-corretto-headless -y
+
+2)
+yum install maven -y
+
+
+if ( it is 'clean')
+then
+	delete target folder
+
+if ( it is 'clean test')
+then
+	delete target folder
+	test
+	
+if ( it is 'package')
+then
+	test
+	compile  create the .class (bytecode)
+	create the war
+=========================
+Install Maven:
+Maven - t2.micro
+apt install maven -y
+mvn --version
+
+Steps for SonarQube:
+===========================
+1)Sonarqube - t2.medium
+2)Install Java v17
+3)Copy url to install SonarQube community version 
+4)Goto /opt folder => cd /opt
+4)wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.4.87374.zip
+5)unzip <zip file>
+6)useradd sonar
+7)visudo -> add details=> "sonar    ALL=(ALL)   NOPASSWD: ALL"
+8)chown -R sonar:sonar /opt/sonarqube-9
+9)chmod -R 775 /opt/sonarqube-9
+10) su - sonar -> switch to "sonar" user
+10)Goto => /opt/sonarqube-9/bin/linux-x86-64
+11)sh sonar.sh start
+12)sh sonar.sh status
+13)add port 9000 in security group
+14)<public IP of sonarqube server>:9000
+15)user name: admin
+pwd: admin
+16)Update pom.xml file with below details:
+ <properties>
+                <java.version>1.8</java.version>
+                <sonar.host.url>http://13.233.224.191:9000/</sonar.host.url>
+                <sonar.login>admin</sonar.login>
+                <sonar.password><provide your password></sonar.password>
+        </properties>
+17)run command: mvn sonar:sonar		
+18)https://github.com/madandevops2024
+
+19)Sonar Scanner has updated with issues after doing the Code Review
+
+20)Sonar Token
+squ_515e204ad831a268575dbf2b4f761d066107c24f
+
+<sonar.host.url>http://13.233.224.191:9000/</sonar.host.url>
+<sonar.login>squ_515e204ad831a268575dbf2b4f761d066107c24f</sonar.login>
+
+==========================
+Quality Profile
+-----------------
+#Quality profile means set of rules to  perform code review
+
+Quality Gate
+===============
+#Quality Gate represents set of metrics to identify project quality by whether it is Passed or Failed.
+
+Conclusion
+-------------
+#If project quality gate is failed then we should not accept that code for deployment
+
+#As a DevOps Engineer, we will perform code review and we will send code review to Development team for this we will send them sonarqube server url so that Development team will work on fixing the issues.
+
+======================================================
+
+How to integrate Sonarqube with our Jenkins Server
+======================================================
+1)Install SonarQube Scanner Plugin
+2)Add SonarQube Scanner Plugin
+3)Add Maven Plugin
+4)Goto Manage Jenkins -> System
+5)Select "Environment variables" in section "SonarQube servers"
+6)Click on  "Add SonarQube" in section "SonarQube Installations"
+7)Goto Manage Jenkins -> Credentials ->  Click on "System" => Click on "Global Credentials(unrestricted)" => Click on "Add Credentials" => Select "Secrete Text" => Paste token created from SonarQube Server.
+8)Goto Manage Jenkins -> System => SonarQube installations => Select our token from the dropdown list in section "Server authentication token"
+
+
+Pipeline script to connect SonarQube:
+----------------------------------------
+pipeline {
+    agent any
+
+    tools {
+       maven "Maven-396"
+    }
+
+    stages {
+        stage('Github') {
+            steps {
+                // Get some code from a GitHub repository
+                git branch: 'main', url: 'https://github.com/madandevops2024/Project9_Java_WebApp.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+        
+        stage('Code Review Using SonarQube') {
+            steps {
+                withSonarQubeEnv(credentialsId: 'Sonarqube-server-id', installationName: 'Sonarqube-Server') {
+                    sh "mvn sonar:sonar"
+                }
+            }
+        }
+    }
+}

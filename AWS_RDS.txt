@@ -1,0 +1,52 @@
+AWS RDS (Relational Database Service)
+=======================================
+
+-> Every application will contain 3 Layers:
+1) Front End (User interface)
+2) Back End (Business Logic)
+3) Database
+
+-> End Users will communicate with our application using front-end (user interface)
+
+-> When end-user perform some operation in the front-end then it will send request to the backend. Backend contains the business logic of the application.
+
+-> Backend logic will communicate with our Databse to perform DB activities like:
+a) Insert
+b) Update
+c) Retrieve 
+d) Delete
+=========================================
+Challenges with Database Setup on our own
+----------------------------------------------
+1) Setup a server to install the Database software
+2) Purchase Database software license
+3) Install this Database software into our server
+4) Setup the Network for our machines
+5) Setup power of machines
+6) Setup a server room or Data center to keep our machines
+7) Setup AC for 24/7
+8) Setup Database backups
+9) Disaster Recovery
+10) Setup Security
+etc
+
+-> If we use AWS Cloud, then AWS will take care of all the above activities which are required to setup a Database for our application.
+
+-> In AWS, we have AWS RDS service to create and setup databse required for our application.
+
+-> We just need to pay the money and use Database using AWS RDS service.
+DB setup and maintainence will be taken care by AWS Admin Team.
+
+-> Using RDS , we can easily set up, operate and scale up/down a relational database in the cloud.
+
+======================================================
+We Create Database, verify the connection and finally we will provide the 'Endpoint' url.
+
+User Name: admin
+pwd: Tiger*49
+Endpoint: database-1.c7wu2mcysc77.us-east-1.rds.amazonaws.com
+Port: 3306
+===================================================
+To test the connection, install a tool:
+MySql Workbench 
+https://dev.mysql.com/downloads/workbench/

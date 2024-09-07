@@ -1,0 +1,31 @@
+$clear
+$sudo apt update 
+$cd /var    (change directory)
+$ls (list out all the files and folders)
+$ls -l
+$cd .. (To come out of the existing directory)
+$sudo -i (To become a root user)
+$apt install apache2 -y
+$cat <file name>
+$vi index.html (type ggdG -> will erase all the file content)
+In vi editor after erasing the content , press ESC key
+
+Press 'i' to insert text.
+After entering text , press ESC again.
+:wq (to save the content)
+
+Download a web application from www.free-css.com website.
+
+How to download a software from internet on linux server?
+
+$wget <url> (To download any software from internet)
+
+After download, unzip the zip file.
+
+$unzip <zip file>
+$apt install unzip -y
+
+To copy files and folders into another folder, use below command.
+
+$cp <source> <destination Directory>
+$cp cake-shop-website-template/* -r /var/www/html/

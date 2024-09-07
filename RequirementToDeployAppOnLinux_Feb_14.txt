@@ -1,0 +1,20 @@
+1) Create a ubuntu server
+2)update the server with latest software
+
+apt-get update 
+apt update 
+apt update -y
+apt install <software name> -y
+
+IIS Web Server -> inetpub/wwwroot/iisxyz.html -> inside in this folder we have copied the project files.
+
+Which web server software we are going to use in linux?
+
+Apache is a web server we are going to install
+We have to download the application from internet.
+
+Below folders will be created inside in a existing folder called : /var
+/www/html/index.html
+/www/html/
+
+apt install apache2 -y

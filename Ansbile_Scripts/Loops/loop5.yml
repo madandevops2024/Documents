@@ -1,0 +1,12 @@
+---
+- name: Usuage of loops
+  hosts: all
+  become: yes
+  tasks:
+    - name: apt module internally uses loops
+      apt:
+        name: 
+          - apache2
+          - wget
+          - tree
+        state: present

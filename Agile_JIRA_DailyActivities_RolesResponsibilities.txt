@@ -1,0 +1,140 @@
+Agile Methodology
+===================
+
+#Agile Methodology is one of the most famouse SDLC methodology in the IT Industry.
+
+#Planning + Design + Development + Testing + Delivery is continous process.
+
+#In Agile Methodology, we will deliver project to client in multiple releases.
+They are called as Sprints.
+
+Ex: Sprint 1 , sprint 2 ... sprint n
+
+#In Agile methodology everyday we will have Scrum meetings.
+Scrum meeting is also called as Status call or stand up call.
+
+
+Agile Terminology:
+--------------------
+
+1) Story
+2) Story Points
+3) Backlog Grooming
+4) Sprint Planning
+5) Sprint
+6) Retrospective
+
+#Backlog grooming is a meeting where all the team members will discuss about pending tasks in the project.
+
+#Story means a task where a developer will work one
+
+#Story points will represent the complexity of the task
+For every task a story point will be assigned.
+
+1 points -> complexity is very minor
+3 points -> complexity is minor
+5 points -> complexity is medium
+8 points -> complexity is high
+
+#Backlog means the stories which are pending in the project
+
+#Sprint planning is a meeting in which team will discuss about future stories to complete in coming sprints.
+
+#Sprint represent set of stories to complete in the given duration and mostly the sprint duration will  be around 2 weeks.
+
+#Scrum is a meeting in which all team members will update about their work progress to the 'scrum master'
+
+#Retrospective is a meeting in which team members will discuss about sprints reviews.
+		1) What went well
+		2) What went wrong
+		3) Any lessons learnt
+		4) Any improvement required
+		5) Any new ideas team want to share...
+		
+============================================
+
+JIRA
+====
+#JIRA is software developed by Atlasian company
+
+#JIRA is called as Project Management software
+#JIRA is used to manage project work:
+	a) Story creation
+	b) Story allocation
+	c) Report Generation etc
+	
+#JIRA is also used for Bug Reporting
+
+#JIRA is a licenced software but we can use trial version for practice.
+
+===========================================
+
+Roles & Responsibilities
+============================
+
+1) Work with Cloud Services
+2) Enviroment creation (Ex: DEV, SIT, UAT and Prod)
+3) Creating Github Repositories based on developer team requests
+4) Writing Docker files
+5) Creating Kubernetes manifest files
+6) Creating Jenkins Pipeline
+7) Monitoring Jenkins Pipeline
+8) Infrastructure provisioning using Terraform
+9) Writing Playbooks for configuration management
+10) Cluster monitoring
+
+===========================================
+
+Day to day activities
+======================
+
+#We need to check the emails
+
+#If required we need to provide replies to those emails
+
+#Check JIRA dashboard (Any tickets assigned or check for the replies for those which we have asked for clarification)
+
+#We have to join the stan up call to discuss action plans for that day and if any issues are there, we have to discuss.
+
+#Sometime tickets assignment will happen in the stand up call or after the stand up call.
+
+#We will be working below activities or types of tasks as a DevOps Engineer:
+
+	- Repository creation
+	- Enviroment creation (Ex: DEV, SIT, UAT and Prod)
+	- Access Permissions
+	- Infrastructure provisioning
+	- Monitoring
+	- Pipeline creation/execution
+	- Monitoring
+	- Trouble Shooting
+	- Infrastructure backup planning
+	- Automation through scripts
+	- Documentation of the activities
+	- R & D
+	- In house trainings to be completed
+	- Conducting Knowledge Transfer sessions to team
+	
+#We have to store documents in:
+a)Sharepoint
+b)Github Repository
+
+#Check calender for any scheduled meetings 
+	a) Meetings with our team
+	b) Meetings with Onshore
+	c) Meetings with Development team
+	
+# Join status call to give work updates to Scrum master
+	a) What we have done for that day
+	b) What we are working on
+	c) When will our task will be completed
+	d) Any challenges to complete the task
+===============================================	
+
+
+-----------------------------------------------------
+
+	
+		
+  
+

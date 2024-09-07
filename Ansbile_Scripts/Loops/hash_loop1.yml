@@ -1,0 +1,12 @@
+---
+- name: Usuage of hash loops
+  hosts: all
+  become: yes
+  tasks:
+    - copy: 
+        src: "{{ item.a }}"
+        dest: "{{ item.b }}"
+      with_nested:
+        - { a: '/etc/passwd', b: '/tmp' }
+        - { a: '/etc/group', b: '/mnt' }
+        - { a: '/etc/shadow', b: '/opt' }

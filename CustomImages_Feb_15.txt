@@ -1,0 +1,28 @@
+What is Custom Image?
+How to create a Custom Image?
+What are the advantage of having a Custom Image?
+
+
+AMI -> Amazon Machine Image
+
+Image or Software , both are same.
+
+When we create a EC2 instance and Windows Image if selected , we get:
+In one of the Data Center, a virtual machine will be running with Windows OS.
+
+Ubuntu OS
+Installed Apache WebServer
+Installed Unzip software
+Deployed the Web application
+
+Create a new software package -> Custom Image
+
+Convert the above image to a custom image.
+
+Client approves and requests to deploy this application on 200 Servers.
+
+
+
+
+
+

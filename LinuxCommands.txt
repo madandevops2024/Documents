@@ -1,0 +1,823 @@
+200+ Linux Distributions are available.
+Fedora Linux
+Kali Linux
+
+Ubuntu/Cent OS/ RED HAT Enterprise Linux
+
+1)Clear: To clear the screen/terminal
+2)whoami : To find the logged in user
+3)date
+4)cal
+5)pwd: present working directory
+6)mkdir : To create a new directory/folder
+ls: displays all the list of files and folders/directory
+ls -l: display details in long format
+cd: change directory
+$cd <folder name>
+cd .. : to come out of the existing directory/folder
+cd ~: to come back to the user folder/directory
+ex: 
+[ec2-user@ip-172-31-14-165 ~]$ cd ..
+[ec2-user@ip-172-31-14-165 home]$ ls
+ec2-user
+[ec2-user@ip-172-31-14-165 home]$ cd ~
+[ec2-user@ip-172-31-14-165 ~]$ pwd
+/home/ec2-user
+
+ls -lr: to display files and folders in reverse order
+touch: This command will create one or more than one files at a time but without any content.
+ex: touch file1.txt file2.txt
+
+cat <filename> : Display the content if the file already exists.
+
+cat > <filename>: Used to create single file at a time and allows to add content to the file.
+
+Note: Enter Control+ c after finishing of writing content.
+
+cat >> <filename>: This command allows to append the existing content.
+
+tac: This command displays content in reverse order.
+
+rmdir: Deletes a directory/folder only if they are empty.
+
+rm -r: Removes directory/folder even they are not empty.
+
+ls -l <directory name>: displays files and folders without going inside the folder/directory.
+
+ls -lt: displays files and folders as time based
+ls -ltr: displays in reverse order (of  ls -lt)
+
+cp: Copies content from one file to another
+cp <source file> <desitination file>
+
+cat "first file" "second file" > "target file": To copy content from multple files to a single file.
+ex: $cat file1.txt file4.txt > file2.txt
+
+cat -n file2.txt: Displays content with line numbers.
+
+rm <file name>: removes a file.
+
+mv file5.pdf file5.txt : to rename a existing file.
+
+wc file2.txt: Displays number lines, words and characters in the specified file.
+
+head: By default, it displays first 10 lines of any file.
+
+head -4 <filename> : Displays first 4 lines of the file.
+
+tail: By default, it displays last 10 lines of any file.
+
+tail -4 <filename> : Displays last 4 lines of the file.
+
+===========================================
+Vi Editor
+===========
+vi = Visual display editor
+vim  - Visual display editor improvised
+
+vi editor has 3 modes.
+1) Command mode
+2) Insert or Edit mode (Press i to get into this mode)
+3) Extended command mode ( we can either quit or save and quit the file)
+
+vi Commands in command mode:
+
+h: to moveleft		
+l: to move right	
+j: to move down
+k: to move up
+H: to move top of the screen
+L: to move the last line of the content
+n: start of the current line
+$: end of the current line
+yy: copy entire line
+p: paste
+dd: delete the entire line
+u: reverts the previous actions
+w: allows to move word by word
+b: backward movement word by word
+
+:q! => without saving the file modifications, we are quitting and coming out of the vi editor.
+
+:wq -> saves the changes and quit so that we can come out of the vi editor.
+
+========================================
+SED command
+=============
+a) SED stands for Stream Editor.
+b) SED is used for Substitution of strings in a file.
+c) We can replace one word with another word.
+
+Ex:
+
+"line" should replace with "newline".
+
+sed 's/line/newline' file2.txt -> This command temporarily replaces the old word with new word.
+----------------------------
+To replace permanently, use below command:
+
+sed -i 's/line/newline' file2.txt
+----------------------------
+#To delete last line of the file
+
+$sed '$d' <file name>
+$sed '$d' file2.txt
+
+#To delete a specific line, give line number.
+$sed '3d' file2.txt
+
+#To delete from specific line until the last line.
+$sed '8,$d' file2.txt
+-----------------------------------------
+GREP command
+==============
+grep command stands for 'Global Regular Expression Print'
+
+-> grep command is a utility tool in linux , used for searching and filtering in a text file.
+
+#Match the word and print the lines 
+$grep 'third' file2.txt
+
+#Match with case insensitive
+$grep -i 'Third' file2.txt
+
+#Display line numbers within search results
+$grep -n 'third' file2.txt
+
+#Display all mismatched text lines of a file
+$grep -v 'third' file2.txt
+
+#Search the word in complete file system
+$grep -i 'third' *
+=========================================
+File Permissions:
+=================
+
+To restrict user as per roles , we have 3 levels of file permissions.
+
+1)User Section:
+A user is the one who created the file.
+By default, whoever creates the file, becomes the owner of that file.
+User can create, delete or modify the file.
+
+2)Group Section: A group contains multiple users.
+All the users belonging to a group hae same access permissions for a file.
+
+3)Other section: Anyone who has access to the file other than user and group are other type.
+Other has neither created the file nor is group member.
+
+r- read
+w- write
+x- execute
+-------------------------------------
+ chmod: To change file permission, we have 'chmod' command.
+ 
+ chmod uses + and - symbols in its command.
+ + means adding a permission
+ - means removing a permission
+ 
+ Adding and removing a permission on user section:
+ chmod u+x file1.txt
+ chmod u-x file1.txt
+ 
+ Adding and removing a permission on group section:
+ chmod g+w file1.txt
+ chmod g-w file1.txt
+ 
+ Adding and removing a permission on Other section:
+
+ Give write and execute permission to file2.txt
+  chmod o+wx file2.txt
+  
+===================================
+File permissions can be changed usuing numeric numbers:
+0: No permission
+1: Execute
+2: Write
+3: Execute and Write
+4: Read
+5: Execute and Read
+6: Read and Write
+7: Read , Write and Execute
+=======================
+Scenrio 1:
+Remove all the permissions for User and Group Section and give full permission to the Other Section.
+
+$chmod 007 file1.txt
+
+Scenrio 2:
+
+Give all the permissions for all the sections.
+
+$chmod 777 file1.txt
+
+Scenrio 3:
+
+ user should have all permissions
+ group only r,w
+ other only r, e
+ 
+$chmod 765 file3.txt
+-----------------------------
+If we create a file by default what permissions will it have?
+644
+===============================
+Users and Groups in Linux
+===============================
+-> Linux is a multi user based OS
+-> In every Linux OS, by default 'root' user account will be available.
+
+roor user -> Super User
+
+-> Whenever we launch a Amazon Linux instance, we get a 'ec2-user' account by default.
+
+-> For every user account, one /home directory wil be available.
+
+-> We can get user account information using a 'id' command.
+
+$id <user name>
+--------------------------------
+$sudo su (Switched to super user or root user)
+Here you will be not switched to the root folder.
+
+$sudo su -: User name will change and also will switch to the root user folder.
+
+$exit (to switch back to previous user)
+==========================================
+
+Working with Users and Groups in Linux:
+---------------------------------------
+$useradd <user name>
+Ex: 
+$sudo useradd ram 
+$sudo passwd ram
+$cat /etc/passwd 
+
+#switch user:
+Scenerio 1:
+$su rani
+$cd ~ (To get inside rani home directory)
+$exit
+Will go back to previous user.
+
+Scenerio 2:
+$su ram
+$cd ~ (To get inside rani home directory)
+$exit
+Will go back to previous user.
+=================================
+How to delete user accounts:
+------------------------------
+$userdel <username> - DO NOT USE THIS Command
+
+Scenerio 1:
+[ec2-user@ip-172-31-14-165 ~]$ pwd
+/home/ec2-user
+[ec2-user@ip-172-31-14-165 ~]$ cd ..
+[ec2-user@ip-172-31-14-165 home]$ ls
+ec2-user  ram  rani
+
+[ec2-user@ip-172-31-14-165 home]$ sudo userdel ram
+[ec2-user@ip-172-31-14-165 home]$ ls
+ec2-user  ram  rani
+[ec2-user@ip-172-31-14-165 home]$
+---------------------
+Scenerio 2:
+$sudo userdel rani --remove (User account will be deleted along with user home directory)
+============================================
+How to create Groups in Linux
+---------------------------------
+->You can create multiple groups.
+->To each group, you can give required permissions.
+->Later on, whenever you create a user account,no need to give specific permissions to this user account, instead add that user to the respective group which have the required permissions.
+
+#Create a group
+$sudo groupadd <group name>
+$sudo groupadd devteam
+$sudo cat /etc/group
+$sudo useradd teja
+$sudo passwd teja
+$sudo id teja
+
+#How add user account to a group
+$usermod -aG devteam teja
+--------------------------------
+#To list all the users added to a group:
+$sudo lid -g <group name>
+----------------------------
+#How to remove the user form the group
+$sudo gpasswd -d <username> <groupname>
+---------------------------------------
+How to rename a group name 
+$groupmod -n <new name> <old Name>
+--------------------------------
+How to delete a group
+
+$sudo groupdel <group name>
+----------------------
+How to rename a user
+$usermod -l <new name> <old name> -- Try this one
+-------------------------------
+How to change password of a user
+$passwd <username>
+-------------------------------
+
+chown command:
+===============
+Used to change the ownership of a file or directory.
+
+Change ownership of user:
+sudo chown <user name> <file name>
+Ex: sudo chown ram filename.txt
+
+Change ownership of group:
+sudo chown <:user name> <file name>
+Ex: sudo chown :ram filename.txt
+
+Change both ownership of user and group:
+sudo chown <user name:user name> <file name>
+Ex: sudo chown ram:ram filename.txt
+=====================================================
+locate and find:
+#locate and find command are used for file search.
+
+#locate command will be depending a db (database)
+Install locate command
+$sudo yum install locate -y
+$sudo updatedb (initially)
+
+#find command will do search in entire linux file system
+sudo find / -name file1.txt  (to search in entire file system)
+sudo find /home -name file1.txt ( (to search in only under /home directory)
+
+=====================================================
+Working with ZIP files in Linux
+------------------------------
+$zip -v
+
+#Create a zip file with all text files
+$zip <zip filename> *.txt (Zip all the text files with extension as .txt)
+
+#Display content of the zip file
+$zip -sf <zip file>
+
+#Add new file to zip file
+$zip -r <zip filename> <filename to be added>
+
+#delete a file from the zip file
+$zip -d <zip filename> <filename to be deleted>
+
+#unzip the zip file
+$unzip <zip file name>
+=======================================================================
+'man' command is used to get more information about any linux command
+=======================================================================
+'ping': To check connectivity
+$ping www.gmail.com
+
+wget: To download files from the internet using a URL.
+
+curl: It is used to send HTTP Request to a URL.
+#curl 192.168.1.123
+
+ifconfig: To get IP address of our machine/server
+
+top: To display the running processes
+
+htop: To display running processes in Graphical format.
+Install htop command:
+sudo yum install htop -y
+
+free: To display the memory details
+
+history: Used to display all the command used in that particular session.
+============================================================================
+inode number
+=============
+#inode is one unique number that will be assigned for every file in linux
+#Linux wiill use this inode number to locate or map our files with its name in the linux db.
+================================================================
+Hard Links and Soft Links
+-------------------------------
+#In linux ,  we can create link files (Similar to shortcut files in Windows OS)
+#We have 2 types of link files in Linux:
+ a) Hard Links
+ b) Soft link
+
+Syntaxt to create a Hard link:
+
+$ln <orignal filename> <link filename>
+
+Ex:
+$ln m1.txt m11.txt
+$cat >> m1.txt
+Add some text here.
+<control + c>
+
+Now you should observe the same content in m11.txt as well.
+#if we delete m1.txt, m11.txt will be still  available.
+-------------------------------------------
+Syntax to create a Soft Links
+-----------------------------
+
+$ln -s <orignal filename> <link filename> 
+Ex:
+$ln d1.txt d11.txt
+$cat >> d1.txt
+Add some text here.
+<control + c>
+
+$cat d1.txt
+$cat d11.txt
+
+We should see the content same.
+
+$rm d1.txt
+$cat d11.txt
+Should not get content.
+====================================
+Package Managers in Linux:
+-------------------------------
+We have different types of package managers to install software in linux machines.
+
+We have 2 types of families: Debian and RED Hat.
+
+apt: Advanced Package Tool (Debian based distribution)
+Ex: Ubuntu
+
+$sudo apt install maven
+
+dpkg: It is underlying pkg manager used by apt.
+
+yum: Yellowdog Updater, Modified (RED Hat based distribution)
+
+dnf: DANDIFIED YUM (it is replacing yum pkg manager in latest version of fedor and cent os)
+
+In Amazon Linux
+$sudo yum install java -y
+$sudo yum install maven -y
+$sudo yum install httpd -y (in ubuntu use 'apache2' instead of 'httpd')
+=====================================
+AWK command
+---------------
+The awk command is a versatile text processing tool available in unix like os, including linux.
+
+It allows you to manipulate and extract the information from  a structured text file. Usually in columner format.
+
+It takes input and processes the given input line by line and performs actions based on the specified pattern and values.
+
+$cat >> emp-info.txt
+Ram manager account 30000
+Sita clerk account 20000
+Shekar manager sales 40000
+Mahesh manager account 50000
+Satish clerk sales 5000
+Suneel clerk sales 12000
+Karan clerk sales 10000
+Durga director purchase 60000
+<control + c>
+
+Display the entire file content
+$awk '{print}' emp-info.txt
+
+Display all the manager details:
+$awk '/manager/ {print}' emp-info.txt
+----------------------------------------------------
+.bashrc file.
+=============
+#For every user, a .bashrc file will be created under the home directory.
+#.bashrc is hidden file. (every hidden file starts with a '.')
+#To view the hidden files , we use : ls -la
+#Using .bashrc we can set Environment variables for a user account.
+-------------------------------
+sudoers file
+
+sudoers file is used to configure the user permissions.
+
+$sudo visudo
+(ALL)
+(ALL:ALL)
+
+root ALL=(ALL) ALL
+ram ALL=root  /usr/bin/cat /etc/passwd
+
+-------------------
+Linux Architecture
+==================
+1) Applications
+2) Shell
+3) Kernal
+4) Hardware
+
+-> When we execute any command in Linux then Shell will process our command by verifying whether command is correct or not.
+
+-> Shell will convert our command into Kernel understandable format.
+
+-> Kenel is responsible to communicate with the Hardware componenets.
+
+-> Kernal is a mediator between Shell and Hardware.
+
+-> Shell is mediator between user/applications and Kernel
+
+$cat file1.txt
+
+echo $SHELL -> Display the current shell name. Here $SHELL is a environment variable.
+==========================================================
+What is Shell Scripting?
+-----------------------------
+#Shell is a mediator between users and kernel.
+#Scripting means executing set of commands using a file (with file extension as '.sh')
+
+#The process of executing set of commands which are available in the file using a Shell is called as Shell Scripting.
+
+#Shell scriping is used to perform daily routine activities automatically by executing the shell scripting file.
+
+test.sh
+$sh test.sh -> This command will execute the test.sh file.
+
+variable -> will store the data temporarily 
+We must give a variable name, that name will be treated as a varible.
+Linux Os will allocate some space in memory for the variable so that the value can be stored in that memory location. In short, the memory location is reffered by using the variable name.
+-------------------------
+daily-tasks.sh
+pwd
+date
+cal
+whoami
+
+$sh daily-tasks.sh
+----------
+$vi file1.sh
+#! /bin/bash -> shebeng/shebang
+
+echo "Hello World!"
+echo "Welcome to my World"
+
+$sh file1.sh
+-----------
+read.sh
+
+echo "Enter a number"
+read num
+echo "You have entered a value: $num"
+
+$sh read.sh
+-------
+add.sh
+a=100
+b=200
+
+c=$(($a+$b))
+echo "Sum of $a and $b is: $c"
+
+$sh add.sh
+----------
+Variables are divided into 2 types.
+1)Environment variables (System variable , already defined in .bashrc file)
+$SHELL, $USER
+2)User defined variables ( we will creaet these variables)
+-------------------
+Command line arguments
+
+=> We can accesss command line arguments in a script file using following  way:
+
+$# -> We will get number of arguments
+add.sh 100 200 (arguments as 2)
+
+$0 -> It will give script file name
+$1 -> First argument value
+$2 -> Second argument value
+$3 -> Third argument value
+$* -> All arguments
+
+cmdlineEx.sh= 
+result=$(($1+$2))
+echo "Sum is: $result"
+echo "$0"
+echo "Another approach: $(($1+$2))"
+
+$sh cmdlineEx.sh 100 200
+
+--------------------------
+Conditional Statements
+-> Conditional Statements are used to execute commands one time based on a condition
+Ex: if - else - fi/ if - elif - else
+
+if [ condition ]
+then 
+  statements
+else 
+  statements
+fi
+===========================
+cond1.sh
+echo "Enter your name"
+read name
+
+if [ $name == 'ram' ]
+then
+  echo "Hi $name, you are authorized"
+else
+  echo "Hi $name, you are NOT authorized"
+fi
+
+$sh cond1.sh
+
+-------
+With multiple if statements
+
+echo "Enter your name"
+read name
+
+if [ $name == 'ram' ]
+then
+  echo "Hi $name, you are authorized"
+elif [ $name == 'raghu' ]
+then
+  echo "Hi $name, you are not fully authorized, please contact your admin."
+else
+  echo "Hi $name, you are NOT authorized"
+fi
+=====================
+-gt => greater than
+--------------------
+
+#! /bin/bash 
+
+#Ask user to enter a number
+echo "Enter first number"
+read num1
+
+echo "Enter second number"
+read num2
+
+if [ $num1 -gt $num2 ]
+then 
+ echo "$num1 is greater than $num2"
+else
+	echo "$num2 is greater than $num1"
+fi
+
+=================================
+Case 1:
+Need to display a word 10 times.
+echo "word"
+echo "word"
+echo "word"
+echo "word"
+echo "word"
+echo "word"
+====================
+=> We have 2 types of loops
+1) Range based loop ( for loop )
+2) Conditional based loop ( while loop )
+--------------------------
+Using a for loop:
+
+for (( initial value; conditioin; increment or decrement the initial value))
+do 
+ statement/s
+done
+
+-------------------------------------
+
+#! /bin/bash
+
+for ((count=1;count<11; count++))
+do
+	echo "word"
+done	
+------------------------------------
+Using a while loop:
+
+count=1
+
+while [ $count -le 10 ]
+do 
+	echo "$count"
+	
+	let count++;
+done
+--------------------------------------
+Functions or Methods
+---------------------
+Whenever we want to repeat a task for muliple times, then we can use functions.
+
+#Writing a functions
+function <Function Name>() {
+	Write the instructions/statements
+}
+
+#Call the above function
+<Function Name>
+=======================
+#! /bin/bash
+
+#Writing a function
+function displayName() {
+	echo "This is a function: displayName()"
+}
+
+#Call the above function
+displayName
+============================
+line1
+line2
+<call the function name>
+line4 
+line6
+<call the function name>
+==========================
+Case2: Read a file name then print the content of that file.
+cat <file name>
+
+function displayFileContent() {
+	echo "Enter the file name to read"
+	read filename
+	cat $filename
+}
+
+displayFileContent	
+---------------------------
+#Read the file name from command line argument
+
+filename=$1
+
+function readFileName() {
+	cat $filename
+}
+
+readFileName
+==============================
+#Create a file , if file already exists, display message accordingly
+or else create the file.
+
+echo "Enter the file name"
+readh filename
+
+if [ -f "$filename" ]
+then 
+	echo "$filename is already exists."
+else
+   echo "File does not exists, creating the file.."
+   touch $filename
+fi
+=================================
+Connecting to AWS Cloud using Shell Scripting
+--------------------------------------------
+Display all the S3 buckets
+Display all the IAM users
+
+Steps:
+1)Run command to configure for connnecting to AWS Cloud
+aws configure
+2)Create Access Key and Secreate Access key
+
+#List all the s3 buckets
+aws s3 ls
+
+#List all the IAM Users
+aws iam list-users
+
+#List of EC2 instances
+#aws ec2 describe-instances
+--------------------------------------------
+
+   
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 

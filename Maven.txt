@@ -1,0 +1,16 @@
+maven:
+Maven have following goals:
+
+validate: validate the project is correct and all necessary information is available
+
+compile: compile the source code of the project
+
+package:  take the compiled code and package it in its distributable format such as JAR or WAR
+
+verify: run checks to verify the package is valid and meets the quality criteria
+
+install: installs the package into the local repository. Mostly to use as a dependency in other projects which are running locally
+
+deploy: Used in an integration or release enviroment, copies the final package to the remote repository for sharing with other developers and projects
+
+clean: cleans up the artifacts (are the binary files) created by priod builds.

@@ -1,0 +1,256 @@
+Ansible
+==========
+
+amazon linux -4 
+ubuntu - 6
+
+apt -> only ubuntu
+yum -> only amazon linux 
+
+git and github
+
+https => username and pwd
+ssh => never asked for username and pwd
+
+ssh-keygen -> on Control Machine or Ansible Server
+private key
+public key
+id_rsa.pub
+
+git
+
+.ssh/authorized_keys
+
+vi authorized_keys
+already contains a public
+paste your public key which was generated on our control  machine (or where we have installed Ansible)
+
+
+sshd_config -> /etc/ssh/
+Uncomment:
+
+PermitRootLogin prohibit-password
+PasswordAuthentication no => PasswordAuthentication yes
+
+Restart the ssh Service:
+service sshd restart
+
+ssh root@172.31.40.69
+
+Install Ansible
+===============
+yum install ansible -y
+default inventory file name always will be : hosts
+[dev]
+IP addresses
+
+Ansible AD-HOC commands
+------------------------
+ansible [all / group name / Hostname / IP] -m <module name> -a <arguments>
+
+ansible-doc -l
+ansible-doc <module name>
+ex: ansible-doc copy
+
+ansible dev -m ping
+ansible dev -m shell -a date
+ansible dev -m shell -a uptime
+
+ansible dev -m copy -a 'src=/root/file1 dest=/opt'
+ansible dev -m copy -a 'src=/root/file1 dest=/opt mode=777'
+ansible dev -m copy -a 'src=/root/file1 dest=/opt owner=ravi group=sevati'
+
+ansible dev -m setup
+ansible dev -m setup -a 'filter=ansible_os_family'
+
+ansible dev -m setup -a 'filter=ansible_virtualization_role'
+
+
+===========================================================
+YAML - (Yet Another Markup Language)
+----------------------------------------
+https://yaml.org/
+
+Playbook -> Shell scripts
+---------
+#Playbook is a single YAML file.
+#Playbook contains plays
+#Plays are ordered sets of tasks to execute against host servers from our inventory file i.e., hosts
+#Play defines a set of activities (tasks) to run on managed nodes.
+#Task is an action to be performed on the managed nodes
+
+=> Execute a commands
+=> Run a shell scripts
+=> Install a package
+
+=>Every playbook starts with 3 hypens i.e., ---
+
+=> Host Section: Defines the target machines on which the playbook should be run. This host section refers our inventory file.
+
+=>Variable Sections: This is optional and can declare all the variables needed  in the playbook.
+
+=> Task Section: This section lists out all the tasks that should be executed on the target machine. It specifies the module name. Every task has a name which is only giving description about that particular task.
+============================
+
+1) Declarative Format
+2) Multiline format
+3) Single Line Format
+
+
+task1.yaml or task1.yml
+
+I want to copy the 'passwd' file
+/etc
+
+#ansible-playbook <playbook file name> --syntax-check
+To do a dry run:
+#ansible-playbook task3.yml --check
+#ansible-playbook task3.yml --list-hosts
+
+If you write mulitple tasks in the same playbook, then that file will grow with lots of lines.
+
+WE can write individual tasks in different yaml files.
+And we can then import these individual files in our main playbook.
+
+
+InstallApache.yaml
+task2.yaml
+
+main.yaml
+import 
+============================
+ubntu
+amzn
+
+Variables
+===========
+Advantages of using variables is, we can use the variables in multiple locations in a script.
+
+filename: /etc/password
+
+- copy:
+	src: "{{ filename }}"
+	dest: /opt
+	
+	src: /etc/password
+==============================
+Array type Varibles:
+
+vars:
+	package_name:
+		- tree
+		- git
+		- maven
+		- apache2/httpd
+	
+
+yum:
+	name: "{{ package_name }}"
+	state: present
+===============================
+vars_files: 
+We should use above key i.e., vars_files whenever we are refering a file which contains variables.
+==============================================
+Types of Variables:
+
+1)Playbook variables
+2)Runtime variable
+Ex:
+ansible-playbook <playbook name> --extra-vars package=<Any package name>
+ansible-playbook runtime_var.yml --extra-vars package=tree
+
+3)Group Variables
+================
+We have to create a folder called: 'group_vars' , location will be: 
+/etc/ansible/<Here create the group_vars folder>
+
+Inside this group_vars, create a YAML file with same name as the group names mentioned inside the 'hosts' file.
+
+1) dev => dev.yml or dev.yaml => assume we have 20 Servers
+2) sit => sit.yml or sit.yaml
+
+Ex: vi /etc/ansible/group_vars/dev.yml
+package: tree
+
+Ex: vi /etc/ansible/group_vars/sit.yml
+package: maven
+=================================
+4)Host variables
+=================
+We have to create a folder called: 'host_vars' , location will be: 
+/etc/ansible/<Here create the host_vars folder>
+
+Ex: vi /etc/ansible/host_vars/172.31.4.35.yml
+package: tree
+=====================
+	
+Ansible Vault
+================
+#It is used to secure our data inside the playbooks
+#In playbooks, we will configure username and password in variables or variable files, everyone can see them which is not a good practice.
+#When we are dealing with sensitive data, we should secure that data
+#Therefore to secure the data inside playbooks, we have to encrypt these files with Ansible Vault.
+
+1)To encrypt a playbook file:
+$ansible-vault encrypt <Playbook file name> 
+Prompts to provide a password:
+New Pwd:
+Confirm Pwd:
+
+2)To view a encrypted playbook file:
+$ansible-vault view <Playbook file name>
+Prompts for password
+
+3)To edit a encrypted playbook file:
+$ansible-vault edit <Playbook file name>
+Prompts for password
+
+4)3)To decrypt a encrypted playbook file:
+$ansible-vault decrypt <Playbook file name>
+Prompts for password
+
+4)3)To rekey to change a vault password:
+$ansible-vault rekey <Playbook file name>
+Prompts for password old password
+Provide new password
+
+5)To execute a encrypted playbook , use below command:
+ansible-playbook <playbook file name> --ask-vault-pass
+
+6)We can store a vault password in a file and we can give that file name as input to execute the playbook
+ansible-playbook <playbook file name> --vault-password-file=./<filename>
+===============================================
+Notify & Handlers
+------------------
+Ansible Roles
+===============
+#Roles are a level of abstraction for Ansible configuration in a modular and reusuable format.
+
+#As you add more and more functionality to your playbook, it can become difficult to maintain..
+
+#Roles allow you to break down a complex playbook into seperate and smaller parts that can be called from a entry point. Ex: task/main.yml
+
+ansible-galaxy init <role name>
+
+Steps:
+$ansible-galaxy init apache
+$ansible-galaxy init jenkins
+
+#Create a playbooks:
+--- 
+- hosts: all
+  become: yes
+  roles:
+    - apache
+	- jenkins
+
+
+
+
+
+
+
+	
+
+
+	

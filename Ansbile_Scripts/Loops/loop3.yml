@@ -1,0 +1,34 @@
+---
+- name: Usuage of loops
+  hosts: all
+  become: yes
+  vars:
+    dirname:
+      - /tmp/dir1
+      - /tmp/dir2
+      - /tmp/dir3
+      
+    filename:
+      - /etc/passwd
+      - /etc/shadow
+      - /etc/fstab
+      - /etc/group
+
+  tasks:
+    - copy:
+        src: "{{ item }}"
+        dest: /tmp/
+      with_items:
+        - "{{ filename }}"
+      
+    - file:
+        path: "{{ item }}"
+        state: directory  
+      with_items:
+        - "{{ dirname }}"
+      
+    - copy:
+        src: /etc/group
+        dest: "{{ item }}"
+      with_items:
+        - "{{ dirname }}"

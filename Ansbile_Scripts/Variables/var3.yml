@@ -1,0 +1,13 @@
+---
+- name: Usuage of variables
+  hosts: ubntu
+  become: yes
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Intalling 3 packages using variables
+      apt:  
+        name: "{{ package_name }}"
+        update_cache: yes
+        state: present

@@ -1,0 +1,36 @@
+---
+- name: Exampls of runtime var
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Install packages in RedHat family     
+      yum:
+        name: httpd
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family']=="RedHat"
+
+    - name: Install packages in RedHat family     
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_facts['os_family']=="RedHat"
+
+    - name: Install packages in Debian family     
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family']=="Debian"
+
+    - name: Install packages in Debian family     
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+      when: ansible_facts['os_family']=="Debian"
+
+    - copy: 
+        src: ./sourcecode/
+        dest: /var/www/html

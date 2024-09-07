@@ -1,0 +1,525 @@
+Docker
+=========
+When we install Docker software, below 2 components will be installed:
+
+1)Docker Client
+2)Docker Engine (Server/Host/Daemon)
+
+Deployed 2 Java Web Applications and they are using different Java Runtime 1
+
+Namespacing:
+Isolating resources per process ( or group of processes)
+
+Isolated area of execution of your process(es)
+
+Resources:
+Processes, Hard drive, Network, Users, Hostnames, Inter process Comunication etc.
+
+Process Manager
+Network Manager
+Storage Manager
+File System Manager
+Finally, the application related binary and library files
+
+Control Groups(cgroups):
+Limits the amount of resources used per process
+
+Memory, CPU usuage, Network Bandwidth etc..
+=========================================
+
+Docker is a platform or ecosystem around creating and running containers.
+Docker makes it really easy to install and run software without worring about setup or dependencies.
+
+Container is a isolated area of execution
+
+Image: It is nothing but a mix of the application, dependencies, some libraries etc..
+
+
+Install Docker:
+-----------------
+yum install docker -y
+service docker start
+service docker status
+
+docker container --help
+docker run hello-world
+docker images
+
+Create a container and in this deploy a image.
+Docker hub contains many images
+
+docker run hello-world:
+run -> Pull the image form docker hub
+Create the container and it will start the image inside this container.
+
+Docker server  maintains pool of images.
+
+docker run -it --name webserver ubuntu /bin/bash
+
+ifconfig: To display all the available Network Ids
+Port Forwarding
+docker run -it --name webapp -p 3400:80 ubuntu /bin/bash
+apt udpate -y
+apt install apache2 -y
+wget <url>
+apt install wget -y
+apt install unzip -y
+---------------------------------------------------------
+Dockerfile
+------------
+Dockerfile contains set of instructions to build docker image.
+
+Dockerfile => We can build a image
+docker run <image>
+Image => Code + All the dependencies
+
+To write Dockerfile, we use below keywords:
+
+1)FROM
+2)MAINTAINER
+3)RUN
+4)CMD
+5)ENTRYPOINT
+6)USER
+7)COPY
+8)ADD
+9)WORKDIR
+10)EXPOSE
+11)ARG
+12)VOLUME
+etc...
+--------------------------------------------
+FROM keyword
+-------------
+FROM keyword is used to specify the base image to create our own docker image
+
+FROM ubuntu:<version name>
+FROM ubuntu
+FROM python:3.6
+FROM tomcat:8.0
+
+MAINTAINER
+-------------
+MAINTAINER keyword is used to specify the authoer of the Dockerfile
+
+RUN
+----
+RUN keyword is used to specify instructions to execute when the docker image is creating..
+
+RUN touch file1.txt
+RUN touch file2.txt
+
+We can write multiple RUN instructions and these instructions will executed in same order
+
+CMD Keyword
+---------------
+CMD keyword is used to sepecify instructions to execute when docker container is creating..
+
+CMD "java -jar amazon-app.jar"
+CMD "npm start" => React App
+================================
+COPY command
+-------------
+It is used to copy the files from host machine to container machine
+
+COPY target/amazon-app.war /usr/app/
+COPY pythonApp.py /usr/app/
+
+===================================
+ADD command 
+It is used to copy the files from host machine as well as from internet to container.
+
+ADD target/amazon-app.war /usr/app/
+ADD pythonApp.py /usr/app/
+ADD <url> /usr/app
+--------------------------
+WORKDIR keyword
+-------------------
+It is used to specify the working directory location to process further docker instructions
+
+WORKDIR /usr/app
+
+-------------------------
+EXPOSE
+-----------
+It is used to specify on which port number our application is listening inside a container..
+
+EXPOSE 3000
+====================
+ENTRYPOINT
+------------
+It is used to run our application code in docker container
+
+ENTRYPOINT ["java", "-jar", "amazon-app.jar"]
+============================
+USER keyword
+---------------
+It is used to specify the USER account to execute the dockerfile instructions.
+
+USER root
+USER ram
+============================
+ARG keyword
+------------
+It is used to pass dynamic values
+
+Ex:
+ARG branch-name
+
+RUN sh 'git clone -b $branch-name <github url>
+
+============================
+VOLUME keyword
+---------------
+It is used to specify DOCKER volume for storing the data
+
+VOLUME <volume-name>
+====================
+
+Dockerfile
+---------------
+FROM ubuntu
+
+RUN touch file1.txt
+RUN touch file2.txt
+RUN touch file3.txt
+======================
+Build a image using the Dockerfile
+---------------------------------------
+docker build -t my-custom-image .
+Here -t: Tag name
+
+##If you want to give a new dockerfile name:
+EX: docker build -t react-app -f newDocFile .
+-------------------
+cd FedExProjectMar13/
+
+Deploy the Shopping Website
+=============================
+1)Install git 
+2)git clone https://github.com/madandevops2024/FedExProjectMar13.git
+3)cd FedExProjectMar13/
+4)Install maven => yum install maven -y
+5)mvn clean package => to build the java application
+6)After building the java application , copy the war file to tomcat
+6)Tomcat path:
+/usr/app/local/tomcat/webapps/
+7)Build the image:
+
+docker build -t shoppingsite .
+
+
+8)Run the image in a container using port forwarding:
+docker run -p 8080:8080 -d shoppingsite
+
+URL: http://13.201.186.122:8080/shopping-site-web-app/
+======================================================
+Dockerfile:
+--------------
+
+FROM tomcat
+
+COPY target/shopping-site-web-app.war /usr/local/tomcat/webapps/
+=============================================
+Dependencies:
+---------------
+Java Dependencies exists in a file called: pom.xml
+Python Dependencies exists in: requirements 
+.NET or Angular or React , their dependencies exists in: packages.json
+==========================================================================
+How to push Docker images to Docker Hub Account
+------------------------------------------------
+#login to the Docker Hub Account
+$docker login => Provide your user name
+
+#Tag docker image
+<docker user name>/image name
+madandevops2024/react-app
+
+$docker tag <source name> <new name>
+Ex: docker tag react-app madandevops2024/react-app
+
+$docker push <image name>
+$docker push madandevops2024/react-app
+=============================================
+
+Remove a Image
+-------------------
+docker rmi <image name>
+------------------------------------------------
+
+Stateful and Stateless Containers
+====================================
+
+Stateless Container: Data will be deleted after container got deleted.
+Stateful Container: Date will  be maintained or saved permanently.
+
+Even if we deploy latest code or if we recreate a container, we should not loose our data.
+
+To maintain data permanently, we need to have a container as Stateful Container.
+
+To make container as stateful, we need to  use Docker 'Volume' concept.
+------------------------------------------------------
+=>Docker volumes are used to persist the data which is generated by Docker container.
+
+=> volume is used to avoid data loss
+
+=> We have 3 types of volumes in Docker
+a) Anonymous Volume (No name)
+2) Named volume
+3) Bind Mounts
+
+----------------------------------------------------------
+docker volume --help
+docker volume create myvolume
+
+
+How to attach the volume to a container
+-----------------------------------------
+docker run -it -v myvolume:/tmp ubuntu /bin/bash
+
+$/tmp:/touch xyz{1..10}
+
+Temporarily detach from running a container
+-----------------------------------------------
+control p + q
+
+Path of the volume created:
+------------------------------------------
+cd /var/lib/docker/volumes/myvolume/_data
+
+Map the myvolume to a running container:
+----------------------------------------------
+docker run -it -v myvolume:/tmp ubuntu /bin/bash
+
+
+-----------------------------------------------------------------------
+Docker Network
+------------------
+
+Micro Services:
+-------------------
+Service - a program
+Mobile Product Service -> Java
+Laptop product Service -> React
+
+Database
+
+-----------------------------------------
+Docker Network is used to provide isolated network for containers.
+
+By default we have 3 networks in Docker
+-----------------------------------------
+
+a)Bridge
+b)Host
+c)None
+
+Docker providing network for the containers using Network Drivers
+---------------------------------------------------------------------
+1) Bridge (Default)
+2) Host
+3) None
+4) Overlay (Used in Docker Swarm)
+5) Macvlan
+
+=> Bridge Driver is recommended to run standalone container. It will assign one IP for our container. This is a default driver.
+
+=> Host Driver is also used to run standalone container. It will assign any IP for the container
+
+=> None driver  means no network will be available for our container
+
+=> Overlay driver is used for Orchestration (Docker Swarm)
+
+=> Macvlan network driver will provide a physical IP for our container
+
+Display docker networks
+--------------------------
+$docker network --help
+$docker network ls
+
+Create a docker network
+$docker network create amzn-network 
+
+Attach a network to our container
+=====================================
+docker run --network=<network name> -d ubuntu /bin/bash
+
+docker run --network=amzn-network -d ubuntu /bin/bash
+
+Try:
+ docker run -network amzn-network -d ubuntu /bin/bash
+
+
+To inspect a network
+-------------------------
+docker network inspect <network name>
+docker network inspect amzn-network
+
+docker network create dev-team --subnet=10.0.0.0/24
+docker network create prod-team --subnet=10.0.0.0/26
+=============================================================
+
+Docker Compose
+--------------------
+Docker Compose is used to manage Multi-Container based applications.
+
+To run our application which contains multiple services, then we need to create seperate container for each service.
+
+Using Docker Compose we can easily create/run and manage multiple containers.
+
+We use 'docker-compose.yml' file to provide the containers information to our Docker Compose tool.
+
+This docker-compose.yml file should contain all the informatin related to containers and container dependencies as well.
+
+The default file name is 'docker-compose.yml' but we can change it.
+
+
+-----------------------------------------------------------
+
+Docker Compose file syntax:
+-------------------------------
+
+version: Represents version number
+
+Services: Represents our containers
+
+network: For communication
+
+volumes: Reprsents storage for the containers
+
+---------------------------------
+To download Docker Compose
+
+https://docs.docker.com/compose/install/standalone/
+
+curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
+$sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+=======================================
+
+1)Download git repository:
+https://github.com/madandevops2024/AmazonStore.git
+
+2)Build the Java application using Build tool i.e., maven
+mvn clean package
+
+3)Buil image
+docker build -t amazon-store-mysql-app .
+
+4)Execute the docker-compose.yml
+$docker-compose up -d
+
+
+Connecting to a running container
+=====================================
+docker-compose ps
+docker exec -it amazonstore-mysqldb-1 /bin/bash
+bash-4>mysql -u root -proot
+mysql>show databases;
+mysql>use amazon-store;
+mysql>show tables;
+mysql>select * from product;
+mysql>exit
+bash-4>exit
+
+To terminate the containers
+5)docker-compose down
+
+To stop running container
+6)docker-compose stop
+
+To start running container
+7)docker-compose start
+
+
+#Docker Containers can be made as Stateful uisng Bind Mount Volume
+
+8)$mkdir data
+--------------------------------------------------------
+
+Docker Swarm
+===============
+#It is a container orchestration platform.
+
+#Orchestration means managing multiple containers
+
+#Docker Swarm is used to setup Docker Cluster
+
+#Cluster means group of servers
+
+#We will setup Master and Worker nodes using Docker Swarm 
+
+#Master node will schedule the tasks (creating the containers) and manage the nodes (EC2 instances/virtual machines/servers) and node failure
+
+#Worker nodes will perform the actions based on master node instructions.
+
+#Docker Swarm is already available in Docker Engine
+
+Docker Swarm Features
+-------------------------
+1)Cluster Management
+2)Scaling
+3)Load Balancing
+etc..
+
+Docker Swarm Cluster Setup
+---------------------------
+1)Create 3 EC2 instance (Amazon linux) and install Docker in all the 3 instances.
+
+2)Add Port 2377 in Security Group (assuming all 3 instances having common SG) so that Docker Swarm can communicate with the worker nodes (in the cluster)
+
+3) Add required port number as per the application that we deployed in the Security Group. 
+
+1) Master Node
+2) Worker Node
+
+---------------------
+
+#Run below command to initialize and create the master node:
+$docker swarm init --advertise-addr <private IP address>
+$docker swarm init --advertise-addr 172.31.12.4
+
+#Copy the token and execute in all the worker nodes so that they can join with the master node
+
+Ex:
+docker swarm join --token SWMTKN-1-2rr90kny9izjpm51gtcu8c7k9313zz0duh716euyl9z2z9no6c-c802n7i2if28baouweizaw6oy 172.31.12.4:2377
+
+Docker Swarm Service
+-----------------------
+#Service is a collection of one or more containers of SAME image
+
+#There are 2 types of services in Docker Swarm
+a)Replica (Default Mode)
+b)global
+
+$docker service create --name <name of the service> -p <host port>:<container port> <image Name>
+
+Run only on the Master Node:
+------------------------------
+$docker service create --name shoppingsite-service -p 8080:8080 madandevops2024/shoppingsite 
+
+#Check whether service is available or not
+$docker service ls
+
+#We can access our application using below URL:
+http:/<master node public ip>:8080
+
+#Verify service details
+$docker service ps <service name>
+$docker service ps shoppingsite-service
+
+#We can scale multiple containers using docker service
+$docker service scale <service name>=<number of replicas>
+$docker service scale shoppingsite-service=2
+
+#Remove docker service
+$docker service rm shoppingsite-service
+
+#Remove one node or more from the swarm cluster
+$docker swarm leave
+---------------------------------------
+

@@ -1,0 +1,9 @@
+---
+- name: Exampls of runtime var
+  hosts: amzn
+  become: yes
+  tasks:      
+    - yum:
+        name: "{{ package }}"
+        state: present
+        update_cache: yes

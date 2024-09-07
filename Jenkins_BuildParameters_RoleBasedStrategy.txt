@@ -1,0 +1,76 @@
+How to Create Jenkins Jobs with Build Parameters
+===================================================
+# Using Build Parameters we can avoid hard coding.
+
+Steps:
+1) Create New Item
+2) Enter Item Name & Select Free Style Project
+3) Select "This Project is parameterized" in General Section
+4) Select Choice Parameter
+5) Name : BuildBranchName
+6) Choices : Enter every branch name in each line (press enter and add new build name)
+7) Branches to Build : 
+	 */${BuildBranchName}
+--------------------------------------------------------------------
+User Management In Jenkins
+-----------------------------
+
+# In Our Project multiple teams will be available
+
+			a) Development team (50)
+			b) Testing team (20)
+			c) DevOps Team (3)
+
+1) For every Team member Jenkins login access will be provided. 
+   Every team members will have their own user account to login into jenkins.
+
+2) DevOps team members are responsible to create/edit/delete/run the jenkins jobs
+
+3) Developers and Testing team members are only responsible to run the jenkins job.
+
+-------------------------------------------------
+How to create users and manage user permissions
+================================================
+
+1) Go to Jenkins Dashboard
+
+2) Manage Jenkins -> Manage Users
+
+3) Create Users
+---------------------------------------------------
+Working with User Groups in Jenkins 
+=====================================
+
+Step-1 : Install Required Plugins
+----------------------------------
+# Install Role-based Authorization Strategy Plugin
+
+# This plugin allows you to define roles and assign them to users or groups.
+
+
+Step-2 : Configure Security
+----------------------------------
+1) Go to "Manage Jenkins" > "Security"
+
+2) Select Authorization as "Role-Based Strategy"
+
+3) Click "Save" to apply the changes
+
+Step-3 :  Create User Roles
+----------------------------------
+1) Go to "Manage Jenkins" > "Manage and Assign Roles."
+
+2) Click "Manage Roles" and define new roles based on your requirements (e.g., admin, developer, tester).
+
+3) Click "Add" to create a new role, and specify the permissions for that role.
+
+Step-4 : Assign Users to Roles
+----------------------------------
+
+1) After creating roles, go to "Manage Jenkins" > "Manage Users & Roles."
+
+2) Select a user and click "Assign Roles" to add them to one or more roles.
+
+
+Step-5 : Test the user login functionality
+-------------------------------------------

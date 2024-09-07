@@ -1,0 +1,529 @@
+Kubernetes
+==============
+Github Clone:
+git clone https://github.com/madandevops2024/Kubernetes.git
+================================================================
+
+#Open Source Orchestration Platform
+
+#Kubernetes is used to manage the containers
+
+#K8s provided a framework to handle container related tasks (deployment, load balancing, scaling etc..)
+
+Kubernetes Advantages
+=======================
+#Container Orchestration
+
+#Auto Scaling
+
+#Self Healing
+
+#Load Balancing
+
+==========================
+K8s Architecture
+--------------------
+Master Node /Control Plane
+Worker Nodes
+
+-------------------
+Development:
+==============
+minikube
+
+Production
+===========
+Amazon Elastic Container Service (EKS) for Kubernetes
+-----------------------------------
+
+Kubernetes Resources
+------------------------
+PODs
+Services
+Namespaces
+Replication Controller
+Replica Set
+DaemonSet
+Deployment
+-----------------------
+
+What is a POD
+==============
+#POD is a smallest building block that we can deploy in Kubernetes cluster
+#One application we can create multiple POD replicas for high availablity
+#Every POD will assigned one IP address
+#If POD crashed for some reason then Kubernetes will replace it (Self Healing)
+#To create a POD we have to write YAML/YML file
+#To expose PODs for outside accesss we need to use Kubernetes Services concept
+
+-----------------------------
+We have 3 types of Services
+
+1)ClusterIP : To access PODs within the ClusterIP
+2)NodePort : To access PODs outside the cluster, then we use NodePort
+3)LoadBalancer : To distribute the traffic to POD replicas
+
+====================================
+
+Kubernetes Manifest YAML/YML Syntax
+------------------------------------------
+
+---
+apiVersion: <Version Number>
+kind: <Resource Name>
+metadata: 
+<Name of the service>
+<Labels>
+spec:
+<List of containers>
+<Container image name>
+<Port details>
+-----------------
+shoppingPod.yml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shopping-site-pod
+  labels:
+    app: shopping-app
+spec:
+  containers:
+  - name: shopping-app-container
+    image: madandevops2024/shoppingsite:v10
+	ports:
+	  - containerPort: 8080
+------------------------------------------
+#Create Pod using the manifest file 
+$kubectl apply -f <yaml file name>
+$kubectl apply -f shoppingPod.yml
+
+#check pods in kubernetes cluster
+$kubectl get pods => Displays the list of Pods running in the  node
+
+#To know in which node our pod is running
+$kubectl get pods -o wide
+-------------------------------------
+
+Services
+===========
+ClusterIP:
+#To expose Pods inside the cluster with fixed IP address then we use the ClusterIP Service
+
+#ClusterIP will generate a IP Address for the PODs
+
+#ClusterIP will not changed even if Pods are recreated
+
+#To expose the pods using a service we will create kubernetes manifest yml file:
+=================================
+shopping-app-svc.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-site-cluster-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: shopping-app #Pod label which we have created under labels
+  ports:
+    port: 80
+	targetPort: 8080
+...	
+    
+#Create the Kubernetes Service
+$kubectl apply -f shopping-app-svc.yaml
+
+#To display all the running services
+$kubectl get service
+
+-------------------------------------
+NodePort
+----------
+#Whenever we want to access our Pods from external source then we have to use NodePort
+
+#We can access our pods using Worker node's (or node) public IP in which our Pod is running.
+Ex: Url to access our pod:
+http://<Worker node public IP>:NodePort/shopping-site
+==============================
+shoping-site-nodeport.yml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-site-nodeport-svc
+spec:
+  type: NodePort
+  selector:
+    app: shopping-app #Pod label which we have created under labels
+  ports:
+    port: 80
+	targetPort: 8080
+	nodePort: 30100
+...	
+
+http://<Worker node public IP>:30100/shopping-site
+
+Range: 30000 - 32767
+
+#Create the Kubernetes Service
+$kubectl apply -f shopping-app-svc.yaml
+
+#To display all the running services
+$kubectl get service
+======================================
+
+LoadBalancer
+-----------------
+#It is used to expose our pods outside the cluster
+#When we use LoadBalancer, then a LoadBalancer Service will be created on our AWS Cloud
+#Using the LoadBalancer URL, we can access our application
+
+shoping-site-lb.yml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-site-lb-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: shopping-app #Pod label which we have created under labels
+  ports:
+    port: 80
+	targetPort: 8080
+...	
+
+  
+ #Create the Kubernetes Service
+$kubectl apply -f shoping-site-lb.yml
+
+#To display all the running services
+$kubectl get service/$kubectl get svc
+	  
+Accessing our application:
+URl: loadbalancer-dns-name/shoping-site	 
+------------------------------------------------
+
+Kubernetes Namespaces
+---------------------------
+#Namespaces are used to group the resources belonging to different projects.
+
+#We can create multiple namespaces for multiple projects
+Ex: fedex-ns, wjru-ns etc..
+
+#To display the existing namespaces
+$kubectl get ns 
+
+#To view the resources of specific namespace:
+$kubectl get all -n <Namespace name>
+
+#To display only pods from a specific namespace
+$kubectl get pods -n <Namespace name>
+
+$kubectl get all -n kube-system
+
+#Create a new namespace
+$kubectl create ns <namespace name>
+$kubectl create ns fedex-ns
+
+#Delete a namespace, so that all the resources created inside this namespace will also be deleted along with the namespace.
+$kubectl delete ns fedex-ns
+========================================================
+Kubernetes provides resources to create Pods to suppport self-healing.
+
+1) ReplicationController
+2) ReplicaSet
+3) Deployment
+4) StatefulSet
+5) DaemonSet
+
+------------------------------------
+ReplicationController
+----------------------
+This service allows us to create Pods and always takes care to run the requested number of Pods to be available.
+
+#Whenever a Pod is deleted, this service will automatically recreats the Pod.
+
+#Also this service allows us to scale up or down our Pods
+
+
+kubectl apply -f shopping-site-replica-ctrl.yml
+kubectl get all -n wjru-ns
+kubectl delete pod shopping-site-replica-ctrl-drjkj -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl delete pod shopping-site-replica-ctrl-dlth9 -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl scale rc shopping-site-replica-ctrl --replicas 10
+kubectl scale rc shopping-site-replica-ctrl --replicas 10 -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl get pods -o wide -n wjru-ns
+kubectl scale rc shopping-site-replica-ctrl --replicas 3 -n wjru-ns
+kubectl get all -n wjru-ns
+-----------------------------------------
+ReplicaSet
+-----------------
+ReplicaSet is same as ReplicationController Resource.
+Difference is, with the keyword "Selector"
+
+Ex:
+
+In ReplicationController:
+selector:
+	app: shoping-site
+	
+In ReplicaSet:
+
+Ex:
+selector:
+  matchLabels:
+    app: shoping-site
+	env: dev
+	version: 2
+----------------
+kubectl apply -f shopping-site-replica-set.yml
+vi shopping-site-replica-set.yml
+kubectl apply -f shopping-site-replica-set.yml
+kubectl get pods -n wjru-ns
+kubectl get pods -o wide -n wjru-ns
+kubectl scale rs shopping-site-replica-set --replicas 20 -n wjru-ns
+kubectl get pods -n wjru-ns
+kubectl scale rs shopping-site-replica-set --replicas 2 -n wjru-ns
+kubectl get pods -n wjru-ns
+kubectl logs shopping-site-replica-set-4p4l4 -n wjru-ns
+
+To delete all the resources:
+
+kubectl delete all --all -n wjru-ns
+-------------------------------------------------
+Kubernetes Deployment
+-------------------------
+
+#Deployment Resource is the most commonly used approach.
+#It internally uses another Resource i.e., ReplicaSet
+#Same like other resources, it supports scale up and scale down of our pods
+#It supports Rolling updates and Rollbacks
+#We can deploy the latest developed code without any server downtime
+
+Deployment Strategies
+-----------------------
+We have 3 different strategies:
+
+1)Re-Create (In this strategy server downtime will be there)
+2)Rolling update (Default)
+3)Canary
+
+Re-Create: Means it will delete all the existing pods and it will create new pods.
+
+Rolling Updates: More suitable for general updates and enhancements, especially when it is a minimal disruption then we can use this strategy.
+
+Canary: Is ideal for high-risk updates or major feature releases.
+---------------------------------------
+Blue Green Deployment
+------------------------
+
+#It is one of the mostly used application release model
+
+#It reduces risk and minimizes downtime of the application
+
+#In this model , we will have two environments:
+Blue (Old Version)
+Green (Latest Version)
+
+#Due to this release model , it will give good confidence to the developers whenever they want to release a new application changes
+---------------------------------------
+ConfigMap & Secrets
+-======================
+We should not hard code enviroment properties in any application.
+
+#Using ConfigMap & Secrets we can pass enviroment specific properties for our application dynamically or in runtime.
+
+#ConfigMap & Secret concepts are used to avoid hard coded properties in any application.
+
+#We can make our application loosely coupled from enviroment properties by using ConfigMap & Secret.
+
+#ConfigMap & Secret will represent the data in key-value format
+
+#ConfigMap is used to store non-confidential data and Secret is used to store confidential data like password, pin , security code etc.
+
+-----------------------------
+#Managing storage is a distinct problem from managing compute instances. 
+
+#The PersistentVolume subsystem provides an API for users and administrators that abstracts details of how storage is provided from and how it is consumed. 
+
+#To do this, we need two new API resources: PersistentVolume and PersistentVolumeClaim.
+-------------------------------
+
+PersistentVolume (PV):
+==========================
+#A PersistentVolume (PV) is a piece of storage in the cluster
+
+#It is a resource in the cluster just like a node is a cluster resource
+
+#PVs are volume plugins like Volumes, but have a lifecycle independent of any individual Pod that uses the PV.
+
+----------------------
+PersistentVolumeClaim (PVC) :
+------------------------------
+
+#PersistentVolumeClaim (PVC) is a request for storage by a user.
+
+#It is similar to a Pod. Pods consume node resources and PVCs consume PV resources.
+
+#Pods can request resources like (CPU and Memory). Claims can request specific size and access modes (e.g., they can be mounted ReadWriteOnce, ReadOnlyMany, ReadWriteMany, or ReadWriteOncePod).
+
+--------------------------
+Use below url to convert secret data to base64 format:
+base64encode.org
+-----------------------------
+amazon-store-app-db-service
+
+amazon-store-app-db-service
+
+***Install Docker on EKS host machine
+
+madandevops2024/amazon-site
+=======================================
+
+
+Prometheus - Kubernetes Cluster Monitering Tool
+-------------------------------------------------
+
+We can monitor the Kubernetes Cluster and cluster components using Prometheus monitoring tool.
+
+#Prometheus is an open source system monitoring and alerting tool.
+
+#Prometheus collects and stores the metrics in a particular time series.
+ 
+
+Grafana
+==========
+#Grafana is an analysis and monitoring tool
+
+#Grafana is a multi-platform open source analytics and interactive visualization web application
+
+#It provides charts, graphs for the web when connected to supported data sources.
+
+#By default Grafana will connect with Prometheus for data source
+--------------------------------------------------
+
+Helm Charts => Package Manager
+============
+
+Amazon Linux: yum
+Ubuntu: apt
+
+#HELM is a package manager for Kubernetes Cluster
+
+#HELM is used to install required softwares in Kubernetes cluster
+
+#HELM will maintain Charts in chart repository
+
+#Chart means collection of configuration files organized in a directory
+
+--------------------------------------
+
+HELM Installation
+--------------------
+Path to install HELM:
+https://helm.sh/docs/intro/install/
+
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+-------------------------------------
+
+Install Metric Server monitoring tool
+-----------------------------------------
+#Before we install the metric server software, we need to add the metric server repo to helm
+
+$helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server
+
+#Install the chart
+$helm upgrade --install metrics-server metrics-server/metrics-server
+
+$kubectl get nodes
+$kubectl get pods
+--------------------------------
+
+Install Prometheus & Grafana in Kubernetes Cluster using Helm
+---------------------------------------------------------------
+#Add the latest helm repository  in Kubernetes
+$helm repo add stable https://charts.helm.sh/stable
+
+#Add Prometheus repo to helm
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+#Update Help repo
+$helm repo update 
+
+#Install Prometheus
+$helm install stable prometheus-community/kube-prometheus-stack
+
+#Get all PODs
+$kubectl get pods
+
+#Get the Services
+$kubectl get svc
+
+-----------------------------
+#By default Prometheus and Grafana services are available within the cluster as ConfigMap. To access them externally , we have to modify 2 service files from ClusterIP to NodePort or LoadBalancer.
+
+#Edit Prometheus Service & change service type to LoadBalancer.
+$kubectl edit svc stable-kube-prometheus-sta-prometheus
+
+#Edit Grafana Service & change service type to LoadBalancer.
+$kubectl edit svc stable-grafana
+
+#Access Prometheus Dashboard:
+
+http://<load balancer DNS URL>:9090
+
+#Access Grafana Dashboard:
+
+http://<load balancer DNS URL>
+
+User name: admin
+Passworkd: 
+
+-----------------------------
+Autoscaling (of Pods)
+------------------------
+Visit: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+
+#It is the process of scale up or scale down of pods based on the demand.
+
+Autoscaling  can be done in 2 ways:
+
+1)Horizontal Scaling
+2)Vertical Scaling
+
+Horizontal scaling means increasing number of instances or servers.
+
+Vertical scaling means increasing capacity of a single system
+
+----------------------------------------------------
+HPA - Horizontal Pod Autoscaling
+VPA - Vertical Pod Autoscaling
+
+HPA: HPA which will scale up or down the number of pod replicas of Deployment, ReplicaSet or ReplicationController dynamically based on the metrics i.e., CPU or memory utilization.
+
+HPA will interact with Metric Server to identify the CPU utilization of POD
+
+#Metric Server is an application that collects the metrics from objects such as Pods, nodes according to the state of CPU, RAM and keeps observing these metrics.
+
+Deploy below metrics files into Kubernetes Cluster:
+https://github.com/madandevops2024/Kubernetes/tree/main/MetricServer
+
+Deploy below HPA sample files into Kubernetes Cluster:
+https://github.com/madandevops2024/Kubernetes/tree/main/HorizontalPodAutoscaler
+
+To increase the load:
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://hpa-demo-deployment; done"
+
+--------------------------------------------
+

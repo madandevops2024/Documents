@@ -1,0 +1,16 @@
+---
+- name: Usuage of variables
+  hosts: amzn
+  become: yes
+  vars:
+    dirname: /tmp/ImpDocs
+    filename: /etc/passwd
+
+  tasks:
+    - file:
+        path: "{{ dirname }}"
+        state: directory
+    
+    - copy:
+        src: "{{ filename }}"
+        dest: "{{ dirname }}"

@@ -1,0 +1,51 @@
+Master & Slave Architecture in Jenkins
+========================================
+#When  we use only the master node (instance/server) to build the multiple projects then burden will be increased.
+
+#If burden increases, then the master node will crash
+
+#Therefore in real-time to execute multiple jobs paralelly we will use Master and Slave configuration.
+
+#This way we can reduce burden on Master node.
+
+#Master node only used to create jobs, configure, schedule and it will delegate build tasks to the slave nodes.
+
+----------------------------------------
+Requirement to create a Slave Node:
+
+1) Create a EC2 instance (Amazon linux/ubuntu)
+2) If you have selected Ubuntu, Git software will be already installed.
+3) We have to install Java
+4) We also have to create a folder/directory on this Slave node.
+Ex: /home/ubuntu: mkdir workloads
+===============================================
+Configure the Slave Node with Master Node
+------------------------------------
+1)Go to Jenkins Dashboard
+2) Go to Manage Jenkins
+3)Select 'Node'
+4)Click on 'New Node'
+5) Give a node name. Ex: Slave1
+6)Copy the 'Remote root directory' : 
+Ex: /home/ubuntu/workloads
+7) Give proper label names:
+Ex: JavaAppOnly
+8)Launch Method:
+Select: Launch agents via SSH
+9)Host: select the slave node's public IP
+10) Install plugin : 'SSH Agent'
+11)Credentials:
+Select: SSH user name with private key
+12)user name: ubuntu
+13)Select Private key and select 'Enter Directly' and click on 'Add'
+14)Copy and paste the private key
+15)Host Key Verification Strategy:
+Select: Manually trusted key Verification Strategy
+
+
+
+ 
+ 
+
+
+
