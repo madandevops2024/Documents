@@ -1,0 +1,77 @@
+Jenkins
+=============
+
+Jenkins is a CI/CD Tool.
+
+CI : Continuous Integration
+CD : Continuos Delivery
+
+#CI CD is one appraoch to automate project Build & Deployment process
+
+#In single day multipe times code will be committed to Github repository from Development team so multiple times we have to perform build and deployment process.
+
+If we do build and deployment process manually then it is time taking process and error prone.
+
+To overcome above problems, we need to automate Project Build and Deployment process.
+
+To automate project build and deployment process we will use JENKINS.
+
+===================
+What is Jenkins ?
+===================
+
+# Open source Software & free
+
+# Developed by using Java Language
+
+# It is called as CI CD Server
+
+# It is used to automate project Build and Deployment process.
+
+# Using Jenkins we can deploy any type of project (ex: java, python, Dot Net, ReactJS, Angular).
+
+================
+Jenkins Setup
+================
+
+1) Create an EC2 instance with Ubuntu AMI (t2.micro instance)
+
+2) Connect to your EC2 instance using MobaXterm or Git bash
+ 
+3) Run below commands on the Ubuntu Server
+
+$ sudo apt update -y
+
+3) Install Java
+$ sudo apt install fontconfig openjdk-17-jre -y
+
+4) Install Jenkins in Ubuntu VM with below commands
+
+$sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+$sudo apt update -y
+$ sudo apt install jenkins -y
+
+Or follow instructions as per below URL:
+
+ https://www.jenkins.io/doc/book/installing/linux/
+ 
+5) Access Jenkins Server in browser using below URL
+
+		URL : http://ec2-public-ip:8080/
+
+	Note: Enable 8080 port in security group
+ 
+6) Get the initial administrative password 
+
+	$ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+# Provide pwd which we have copied to unlock jenkins
+
+# Select "Install Suggested Plugins" button (it will install those plugins)
+
+# Create an Admin account

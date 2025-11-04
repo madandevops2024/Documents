@@ -1,0 +1,21 @@
+---
+- name: Usuage of nested loops
+  hosts: all
+  become: yes
+  vars:
+    filename:
+      - /etc/shadow
+      - /etc/group
+      - /etc/passwd
+
+    dirname:
+      - /mnt
+      - /opt
+      - /tmp
+  tasks:
+    - copy: 
+        src: "{{ item[0] }}"
+        dest: "{{ item[1] }}"
+      with_nested:
+        - "{{ filename }}"
+        - "{{ dirname }}"

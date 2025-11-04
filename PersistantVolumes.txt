@@ -1,0 +1,66 @@
+Volumes in Kubernetes:
+=========================
+
+hostPath Volume:
+A hostPath volume points to a specific file or directory on the node’s filesystem.
+Pods running on the same node and using the same path in their hostPath volume see the same files.
+
+Generally developers creates the YAML files associated with Pods that they want to deploy.
+In a scenerio of directly referencing to volumes, developers need to be aware of configurations.
+
+Persistent Volumes:
+======================
+
+A Persistent Volume (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes.
+
+Persistent Volume is an underlying abstraction for the physical volume.
+
+Ex:
+Volume 1
+Size: Small
+Speed Fast
+
+Volume 2
+Size: Medium
+Speed Fast
+
+Volume 3
+Size: Very Small
+Speed Ultra Fast
+
+Volume 4
+Size: Big
+Speed Slow
+
+Volume 5
+Size: Very Big
+Speed Very Slow
+
+Every Volume which is created can be of different type. Like EBS, Cinder, NFS, GlusterFS etc
+This can be taken care by the Storage Administrator/Operations Team
+
+-------------------------------
+
+Persistent Volume Claim
+=============================
+
+A Persistent Volume Claim is a request for the storage by a User.
+Within the Claim, user need to specify the size of the volume along with access code.
+
+Developer:
+I want a volume of size 10GB which is has speed of Fast for my Pod
+-------------------------------------------------------------------------
+
+Overall Working Steps
+=======================
+
+1. Storage Administrator/Operations takes care of creating PV
+2. Developer can raise a 'Claim' (I want a specific type of PV)
+3. Reference that claim within the Pod Spec file.
+
+
+kubectl exec -it pod-pvc bash
+kubectl delete pvc --all
+kubectl delete pv --all
+
+/usr/local/tomcat/logs/catalina.2025-02-03.log

@@ -1,0 +1,101 @@
+JFrog:
+
+Java
+.war -> If he want to store each binary version then use a repository tool.
+.jar
+
+Binary files are called as Artifact.
+This Artifact we have to store in a repository
+We have below tools:
+
+Nexus
+JFrog
+
+Snapshots -> Daily build binary files.
+Release -> Final version 
+=============================================
+There are 3 types of repositories in JFrog:
+
+Local - .m2/repository/
+==========
+
+Advantage:
+Fully tested and versioned build will be available at all time.
+
+Remote - Remote repository -> 
+===========================
+We will keep common libraries as well as we 
+will also keep the dependenices which have previously downloaded from central repositories.
+
+Advantage:
+It save time and network bandwidth for each similar request.
+
+Virtual: Local + Remote Repositories
+==========
+
+Advantage: No need to give individual urls of hosted and proxy rather give just one url in pom or configuration
+
+Just for reference:
+https://jfrog.com/community/download-artifactory-oss/
+==================================================
+Install JFrog:
+=================
+echo "deb https://releases.jfrog.io/artifactory/artifactory-debs xenial main" | sudo tee -a /etc/apt/sources.list.d/artifactory.list
+
+Import repository GPG key by running the following commands
+-------------------------------------------------------------
+curl -fsSL  https://releases.jfrog.io/artifactory/api/gpg/key/public|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/artifactory.gpg
+
+apt update -y
+
+apt install jfrog-artifactory-oss -y
+
+Start Artifactory with:
+systemctl start artifactory.service
+
+Create a symbolic link:
+=======================
+systemctl enable artifactory.service
+
+Check Artifactory status with:
+systemctl status artifactory.service
+
+
+JFrog default credentials:
+admin
+password
+------------------------------------------
+1)Install Artifactory Plugin
+2)Add Maven plugin
+3)Manage Jenkins -> System -> Goto "JFrog" Section -> Click on "Add JFrog Platform Instance"
+4) Mention a unique "Instance ID" 
+Ex: Jfrog-Artifactory
+5)JFrog Platform URL: http://<public IP of JFrog Instance>:8081
+6)Provide credentials added in JFrog under: Default Deployer Credentials
+
+========================
+7)Create a new job of type: Maven Project
+8)Add your github details
+9)Goto Build Environment section:
+select: Resolve artifacts from Artifactory
+Resolution releases repository:   libs-release
+Resolution snapshots repository:   libs-snapshot
+
+10)Goto Build:
+Goals and options: clean install
+
+11)Post-build Actions -> Select "Deploy artifacts to Artifactory"
+12)Apply & Save
+
+
+<version>0.0.2-SNAPSHOT</version> => Creates a snapshot version inside our :
+libs-snapshot-local => 0.0.2-SNAPSHOT (Folder name)
+
+<version>0.0.3-SNAPSHOT</version> => Creates a snapshot version inside our :
+libs-snapshot-local => 0.0.3-SNAPSHOT (Folder name)
+
+<version>1.0</version> => Creates a release version inside our :
+libs-release-local => 1.0 (Folder name)
+
+<version>2.0</version> => Creates a release version inside our :
+libs-release-local => 2.0 (Folder name)

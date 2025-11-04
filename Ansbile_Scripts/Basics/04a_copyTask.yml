@@ -1,0 +1,10 @@
+---
+- copy: 
+    src: /etc/shadow
+    dest: /opt
+    mode: 777      
+    
+- file:
+    path: /opt/ImportantDocuments
+    state: directory
+      

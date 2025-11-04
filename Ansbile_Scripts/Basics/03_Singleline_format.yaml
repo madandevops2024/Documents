@@ -1,0 +1,8 @@
+---
+- name: This is a single line format
+  hosts: dev
+  become: yes
+  tasks:
+    - copy: src=/etc/hostname dest=/tmp/ mode=0666
+    - file: path=/tmp/new_folder state=directory
+    - yum: name=tree state=present 

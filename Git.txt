@@ -1,0 +1,150 @@
+Git & Github
+==============
+Scenerio 1: (If the development started from scratch)
+A developer will do below steps:
+
+1)Install Git
+2)Create Working Directory/Tree
+3)Goto the working directory and make it a local repository by running the below command:
+ git init
+4)'git init' will create a .git folder
+5) Now onwards, git will start tracking the files and folders which are created and modified by the developer.
+5) Now the working directory can be called as local repository
+6)Local repository can connect to the Central repository (GitHub)
+===========================
+Scenerio 2: (If the development has already started)
+A developer 2 will do below steps:
+
+1)Install Git
+2)Choose location where to download the existing code (ex: c:/ or d:/)
+2)"git clone" <Github repository url>"
+3) After adding some files and folders, do a "git push"
+=========================================
+Scenerio 3: (If developer 1 did some code changes, then developer 2 or all the developers also has to get those changes onto his local repository)
+
+A developer 2 will do below steps:
+
+1)Install Git (only for the first time that too if git is not available)
+2)Choose location where to download the existing code (ex: c:/ or d:/)
+2)"git pull"
+
+===================================
+git --version
+git status
+$git add <filename> : only one file will be added to staging.
+$git add .   or $git add --all (all the files will be movied to staging)
+$git commit -m "Enter some info about the changes"
+
+*Before commit, need to provide user information :
+$git config --global user.email "you@example.com"
+$git config --global user.name "Your Name"
+-------------------------------
+If a file already exists and modified then we can directly use below git command:
+git commit -am "Comments"
+
+instead of doing:
+git add .
+git commit -m "comments"
+----------------------------------------
+
+
+Create a token on GitHub:
+
+-------------------------------------------
+How to connect using ssh:
+
+git init
+git branch -M main
+git remote add origin git@github.com:madandevops2024/AmazonWebProject.git
+
+#Generate a ssh private and public key using below command:
+1)ssh-keygen (This command will create private and public key inside .ssh folder)
+
+2) https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+$ssh-keygen
+$ eval "$(ssh-agent -s)" (To start the ssh-agent process)
+$ssh-add ~/.ssh/id_rsa (run this command if we are not in ".ssh" folder"
+
+git push -u origin main
+----------------------------
+.gitignore 
+If we do not want to  move the files or folders from our local repository to central repository i.e., Github
+=========================
+How to reset the current commit id to the previous commit id:
+
+$git reset HEAD~
+$git reset HEAD~1
+===============================
+How to merge multiple commit ids before a "git push"
+
+$git rebase -i HEAD~3 (Here 3 is the number commits that you want to merge into one commit it)
+
+Ex: 
+pick commit-id1
+pick commit-id2
+pick commit-id3
+
+Modify to:
+pick commit-id1
+squash commit-id2
+squash commit-id3
+===========================
+git stash (Temporarily shelevs the current task so that developer can resumes with that task later)
+
+git stash pop (The shelved task will be shown to the developer after he has completed the other task)
+============================
+Branching
+=============
+Branches:
+Feature -> Develop -> Release -> main
+When a new sprint starts, developers will create new feature branch and this feature should contain the base code taken from the main branch.
+
+$git branch
+Displays all the branch list
+
+$git branch <branch name>
+A new branch will be created.
+
+$git checkout <branch name>
+To switch to any other branch
+
+$git checkout -b <branch name>
+A new branch will be created and will be switched to that new branch
+
+To merge a feature branch files, follow below steps:
+
+1)Switch to the target branch (like develop branch)
+$git checkout develop
+
+2)Merge the branch changes with the target branch (i.e., develop branch)
+$git merge <branch name>
+
+3)push the target branch changes to Github
+$git push origin <target branch(i.e., develop bracnh)>
+
+=====================================
+feature branch can be "many"
+develop branch only one
+A new release branch will created for every release of the sprit release-04-13 -> deployed into production server.
+master or main, only one branch
+
+main/master branch assume  it already contains lot files, amont them file1 is a available already.
+
+developer1 (should take latest code by using 'git pull' command.) -> feature1 -> file1 -> push it main branch
+
+developer2 -> feature2 -> file1 -> 
+
+conflicts with check-in/push
+check-out/pull
+------------------------
+To resove a conflict:
+git fetch
+git merge
+git push
+------------------------
+How to revert a commit which is already commited to the Central repository
+
+git revert <commit id>
+git push
+=========================

@@ -1,0 +1,9 @@
+---
+- yum:
+    name: git
+    state: present          
+
+- file:
+    path: /tmp/DesignDocuments
+    state: directory
+           

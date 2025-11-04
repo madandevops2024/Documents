@@ -1,0 +1,36 @@
+AWS Elastic Beanstalk
+==========================
+IaaS - Infrastructure as a Service
+PaaS - Platform as a Service
+
+Elastic Beanstalk
+--------------------
+-> End-to-End Web application Management service in AWS Cloud
+-> Easily we can run our web application on aws cloud using Elastic Beanstalk service
+-> We just need to upload our web application code on aws Elastic Beanstalk.
+->Elastic Beanstalk provides Platform as a Service
+->Elastic Beanstalk will take care of all the required software and servers which are required to run our web application
+========================
+Ex: If we want deploy a Java web application manually we need to perform below operations:
+
+1) Create EC2 instance
+2) Create Security Groups
+3) Create Network
+4) Install Java runtime software
+5) Deploy Java web application code
+6) If required, we have to create Load Balancers
+7) Auto Scaling services need to be created
+======================================
+-> Instead of we preparing the platform to run the Java Application, we can use Elastic Beanstalk service to run our web application.
+
+Advantages with Elastic Beanstalk
+======================================
+1) Fast and simple to begin
+2) Deveoper Productivity
+3) Complete resource control
+
+Elastic Beanstalk Pricing
+----------------------------
+-> There is no additional charges for using Elastic Beanstalk
+-> You pay for AWS resources that we create to store and run our Web application, like Amazon S3 buckets and EC2 instances, LB, ASG etc..
+ 

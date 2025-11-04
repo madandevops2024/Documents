@@ -1,0 +1,14 @@
+---
+- name: This is multiline format
+  hosts: dev
+  become: yes
+  tasks:
+    - copy: src=/etc/group
+            dest=/tmp
+            mode=777
+
+    - file: path=/tmp/GCP
+            state=directory
+
+    - yum: name=tree
+           state=present  

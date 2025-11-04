@@ -1,0 +1,18 @@
+---
+- name: Exampls of runtime var
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Install packages in RedHat family     
+      yum:
+        name: "{{ package }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family']=="RedHat"
+
+    - name: Install packages in Debian family     
+      apt:
+        name: "{{ package }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family']=="Debian"

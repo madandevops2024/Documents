@@ -1,0 +1,211 @@
+Backup
+=========
+
+Install a plugin called, 'ThinBackup'
+------------------------------------------
+Jenkins Pipeline
+
+In Jenkins we can create Jobs in 2 ways:
+1) Free Style Project (Graphical User Interface)
+2) Pipelines 
+
+# Pipeline means set of stages and steps to automate build a project.
+# Using Pipeline, we can handle complex projects and deployment tasks.
+
+We can create a Pipeline in 2 ways:
+1)Declarative Pipeline
+2)Scripted Pipeline
+
+============================================
+Declarative Pipeline: Pipeline1
+
+pipeline {
+   agent any
+   
+   stages {
+	 stage('Github') {
+		steps {
+		   echo 'This is stage 1.'
+		}
+	 }
+	 
+	 stage('Build') {
+		steps {
+		   echo 'This is stage 2.'
+		}
+	 }
+	 
+	 stage('Deploy') {
+		steps {
+		   echo 'This is stage 3.'
+		}
+	 }
+   }
+}
+=============================================
+Pipeline2
+-------------
+pipeline {
+   agent any
+   
+   tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "Maven 3.9.6"
+   }
+	
+   stages {
+	 stage('Github') {
+		steps {
+		   // Get some code from a GitHub repository
+           git branch: 'main', url: 'https://github.com/madandevops2024/FedExProjectMar13.git'
+		   
+		   script {
+			  try {
+				sh 'make r'
+		      } catch(Exception ex) {
+				   echo 'In catch block, something went wrong in stage: Github'
+		        }
+		   }
+		}
+	 }
+	 
+	 stage('Build') {
+		steps {
+		   // Run Maven on a Unix agent.
+           sh "mvn clean package"
+		}
+	 }	 
+   }
+}
+================================================================
+Pipeline3 - post stage
+-----------------------
+pipeline {
+   agent any
+   
+   tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "Maven 3.9.6"
+   }
+	
+   stages {
+	 stage('Github') {
+		steps {
+		   // Get some code from a GitHub repository
+           git branch: 'main', url: 'https://github.com/madandevops2024/FedExProjectMar13.git'
+		   
+		   script {
+			  try {
+				sh 'make r'
+		      } catch(Exception ex) {
+				   echo 'In catch block, something went wrong in stage: Github'
+		        }
+		   }
+		}
+	 }
+	 
+	 stage('Build') {
+		steps {
+		   // Run Maven on a Unix agent.
+           sh "mvn clean package"
+		}
+	 }	 
+   }
+   
+   post {
+	   always {
+			echo "Always step has been executed"
+	   }
+	   
+	   success {
+			echo "Success step has been executed"
+	   }
+	   
+	   failure {
+			echo "Failure step has been executed"
+	   }
+   }
+}
+================================================================
+Scripted Pipeline:
+---------------------
+
+node {      
+	 stage('Github') {		
+		   // Get some code from a GitHub repository
+           git branch: 'main', url: 'https://github.com/madandevops2024/FedExProjectMar13.git'		  
+	 }	 
+	 
+	 stage('Build') {
+		def mavenHome = tool name:"Maven 3.9.6", type:"maven";
+		def path ="${mavenHome}/bin/mvn";
+		sh "${path} clean package";		
+	 }	 
+   }
+}
+
+
+========================
+Multi-Branch Pipeline
+------------------------
+
+#Creating a seperate Jenkins Pipeline is difficult
+# We can create one pipeline and we can build the code from the multiple branches at a time using 'MultiBranch Pipeline'
+
+#It will scan all the branches in a git repository and it will execute pipeline for all the branches.
+=====================================
+Jenkins Shared Library
+-------------------------
+
+DevOps Engineers when they are working on various Pipeline scripts, normally the repeated tasks they will write in a seperate file inside a functions.
+
+Groovy Language/Script
+
+Jenkins Shared Library is a concept of having a common pipeline code in the version control system that can be used by any number of pipelines just by referencing the library available in the Github. 
+
+Multiple teams can use the same shared library for their team.
+
+1)Create a Repository for the Jenkins Shared Library
+2) Folder Structure:
+vars -> Important, create a 'vars' folder inside the repository.
+src -> Source files
+resources -> resources files
+3)create below groovy file: (WelcomeMessage.groovy)
+def call() {
+	echo "Welcome to Jenkins Shared Library"
+}
+
+4) push the latest changes to Github repository
+5)Manage Jenkins -> System -> Add the library name and branch name under 'Global Pipeline Libraries'
+
+6) Add below statement in the pipeline:
+@Library('Common-Jenkins-Shared-Library') _
+
+7)Github Repository Path:
+https://github.com/madandevops2024/Common-Jenkins-Shared-Library.git
+
+8)
+@Library('Common-Jenkins-Shared-Library') _
+
+pipeline {
+    agent any
+	
+    stages{
+        stage('Welcome Message'){
+            steps{
+              WelcomeMessage()
+            }
+        }
+		
+        stage('Addition'){
+            steps{
+              script{
+                  addition.add(10,10)
+                  addition.add(20,20)
+              }
+            }
+        }
+    }
+}
+-----------------------------------------------------------------------
+ 

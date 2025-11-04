@@ -1,0 +1,16 @@
+---
+- name: Usuage of variables
+  hosts: ubntu
+  become: yes
+  vars:
+    package_name:
+      - maven
+      - tree
+      - apache2
+
+  tasks:
+    - name: Intalling 3 packages using variables
+      apt:  
+        name: "{{ package_name }}"
+        update_cache: yes
+        state: present
