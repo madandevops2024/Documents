@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amazon-store-mysql-deploy
+spec:
+  selector:
+    matchLabels:
+      app: amazon-store-mysql-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: amazon-store-mysql-pod
+    spec:
+      containers:
+        - name: amazon-store-mysql
+          image: <docker hub user-name>/<image name>
+          ports:
+            - containerPort: 8080
+          env: # Setting Enviornmental Variables
+            - name: DB_DRIVER_CLASS # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: amazon-store-db-config-map
+                  key: DB_DRIVER_NAME_VALUE
+
+            - name: DB_HOST # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: amazon-store-db-config-map
+                  key: DB_HOST_SERVICE_NAME_VALUE
+
+            - name: DB_NAME # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: amazon-store-db-config-map
+                  key: DB_SCHEMA_VALUE
+
+            - name: DB_USERNAME # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: amazon-store-db-config-secret
+                  key: DB_USER_NAME_VALUE
+
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: amazon-store-db-config-secret
+                  key: DB_PASSWORD_VALUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amazon-store-mysql-svc
+spec:
+  selector:
+    app: amazon-store-mysql-pod
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+      nodePort: 30786
+  type: NodePort

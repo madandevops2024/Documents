@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shopping-site-pod
+  labels:
+    app: shopping-app
+spec:
+  containers:
+    - name: shopping-app-container
+      image: madandevops2024/shoppingsite
+      ports:
+        - containerPort: 8080

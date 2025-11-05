@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-site-lb-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: shopping-app #Pod label which we have created under labels
+  ports:
+    - port: 80
+      targetPort: 8080

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amazon-store-app-db-deployment
+  labels:
+    app: amazon-store-app-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amazon-store-app-db-pod
+  template:
+    metadata:
+      labels:
+        app: amazon-store-app-db-pod
+    spec:
+      volumes:
+        - name: amazon-store-app-db-volume
+          persistentVolumeClaim:
+            claimName: amazon-store-db-pvc
+      containers:
+        - name: amazon-store-app-db
+          image: mysql
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: amazon-store-app-db-volume
+              mountPath: /opt/mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              #value: root
+              valueFrom:
+                secretKeyRef:
+                  name: amazon-store-db-config-secret
+                  key: DB_PASSWORD_VALUE
+            - name: MYSQL_DATABASE
+              #value: amazon-store-app
+              valueFrom:
+                configMapKeyRef:
+                  name: amazon-store-db-config-map
+                  key: DB_SCHEMA_VALUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amazon-store-app-db-service
+  labels:
+    app: amazon-store-app-db-service
+spec:
+  type: ClusterIP
+  selector:
+    app: amazon-store-app-db-pod
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP

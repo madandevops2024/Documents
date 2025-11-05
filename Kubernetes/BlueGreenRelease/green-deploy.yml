@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      color: green
+      version: v2
+  template:
+    metadata:
+      name: shopping-site-pod
+      labels:
+        version: v2
+        color: green
+    spec:
+      containers:
+        - name: shopping-app-container
+          image: madandevops2024/green-shoppingsite
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,424 @@
+Kubernetes
+=============
+
+Learning phase
+=================
+
+Docker Desktop
+minikube
+
+Production
+============
+Kubeadm
+#AWS Elastic Kubernetes  Service (EKS)
+
+Kubernetes Resources (Objects):
+==========================
+
+Pod
+Service
+Namespace
+Replication Controller
+ReplicaSet
+Deployment
+
+=========================
+
+What is a Pod:
+
+#Pod is a smallest building block that we can deploy in Kubernetes Cluster
+#Each Pod contains one application (running in a container) and we can create such Pods more than one.
+#Every Pod will be assigned a IP address.
+#If Pod crashed for some reason then Kubernetes will replace it (Self Healing)
+#To create a Pod, we have to write YAML/JSON file
+#To expose Pods (i.e., containers inside the Pod) for outside access , we need to use 'Kubernetes Service' concept.
+
+==============================================
+
+We have 3 types of Services:
+
+1) ClusterIP
+2) NodePort
+3) LoadBalancer
+
+ClusterIP:
+#To expose Pods inside the cluster with fixed IP address then we use the ClusterIP Service
+#ClusterIP will generate a IP address for the Pods
+#ClusterIP will not change even if the Pods are crashed and recreated
+#To expose the Pods using a service , we have to create Kubernetes manifest file (YAML)
+=====================================================================
+
+NodePort:
+
+#Whenever we wanto to access our Pods from external source then we have to use NodePort
+
+#The range for NodePort is from 30000 to 32767
+
+#We can access our Pods using Worker Nodes's (node) Public IP in which our Pod is running
+Ex:
+
+<Public IP>:NodePort/<application name>
+
+ 
+===========================================
+
+LoadBalancer:
+
+#It is used to expose our Pods outside the Cluster
+
+#When we use LoadBalancer, then a LoadBalancer Service will be created on our AWS Cloud
+
+#Using LoadBalancer DNS Name(URL) we can access our application
+
+Ex:
+<LoadBalancer DNS Name>/<application name>
+
+================================================
+
+To get the total number of nodes in the cluster:
+$kubectl get nodes
+
+$kubectl apply -f <file name>
+$kubectl apply -f pod.yml
+$kubectl get pods
+$kubectl get pods -o wide
+
+$kubectl get service
+$kubectl get services
+$kubectl get svc
+
+=============================
+Service or any objects will stored in a namespace called 'default'
+
+Kubenetes Namespace
+======================
+
+#Namespaces are used to group the related resources beloging to different projects.
+
+#We can creae multiple namespaces for multiple projects
+Ex: wjru-ns, fedex-ns etc
+
+#To display the existing namespaces:
+$kubectl get ns
+
+#Create a new namespace
+$kubectl create ns <Namespace name>
+$kubectl create ns fedex-ns
+
+#To view the resources of specific namespace
+$kubectl get pods -n fedex-ns
+$kubectl get svc -n fedex-ns
+$kubectl get all -n fedex-ns
+
+#Delete a namespace
+$kubectl delete ns fedex-ns 
+
+Above statement not only deletes the namespace but also deletes all the objects inside the namespace.
+
+--------------------------------------------------------
+
+Kubenetes provides resources to create Pods to support self-healing:
+
+1)ReplicationController
+2)ReplicaSet
+3)Deployment
+
+===============================
+
+Kubenetes ReplicationController
+----------------------------------
+
+#This resource allows us to create Pods and always takes care to run th requested number of Pods to be available
+
+#Whenever a Pod is deleted/terminated for some reason, this service will automatically recreate the Pod
+
+#Also this service allows us to scale up or down our Pods
+
+
+kubectl apply -f replicaCtlr.yml
+kubectl get all -n wjru-ns
+kubectl get pods -o wide -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl delete pod/shopping-site-replica-ctrl-45rhc -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl delete pod/shopping-site-replica-ctrl-7pxxvn -n wjru-ns
+kubectl delete pod/shopping-site-replica-ctrl-7pxvn -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl scale rc shopping-site-replica-ctrl --replicas 10 -n wjru-ns
+kubectl get all -n wjru-ns
+kubectl scale rc shopping-site-replica-ctrl --replicas 4 -n wjru-ns
+kubectl get all -n wjru-ns
+===================================================
+
+ReplicaSet
+-----------------
+ReplicaSet is same as ReplicationController Resource.
+Difference is, with the keyword "Selector"
+
+Ex:
+
+In ReplicationController:
+selector:
+	app: shoping-site
+	
+In ReplicaSet:
+
+Ex:
+selector:
+  matchLabels:
+    app: shoping-site
+	env: dev
+	version: 2
+----------------
+
+kubectl apply -f shopping-site-replica-set.yml
+vi shopping-site-replica-set.yml
+kubectl apply -f shopping-site-replica-set.yml
+kubectl get pods -n wjru-ns
+kubectl get pods -o wide -n wjru-ns
+kubectl scale rs shopping-site-replica-set --replicas 20 -n wjru-ns
+kubectl get pods -n wjru-ns
+kubectl scale rs shopping-site-replica-set --replicas 2 -n wjru-ns
+kubectl get pods -n wjru-ns
+kubectl logs shopping-site-replica-set-4p4l4 -n wjru-ns
+
+To delete all the resources:
+
+kubectl delete all --all -n wjru-ns
+-------------------------------------------------
+Kubernetes Deployment
+-------------------------
+
+#Deployment Resource is the most commonly used approach.
+#It internally uses another Resource i.e., ReplicaSet
+#Same like other resources, it supports scale up and scale down of our pods
+#It supports Rolling updates and Rollbacks
+#We can deploy the latest developed code without any server downtime
+
+Deployment Strategies
+-----------------------
+We have 3 different strategies:
+
+1)Re-Create (In this strategy server downtime will be there)
+2)Rolling update (Default)
+3)Canary
+
+Re-Create: Means it will delete all the existing pods and it will create new pods.
+
+Rolling Updates: More suitable for general updates and enhancements, especially when it is a minimal disruption then we can use this strategy.
+
+Canary: Is ideal for high-risk updates or major feature releases.
+
+$kubectl scale deploy shoping-site-deployment --replicas 5
+---------------------------------------
+
+Blue Green Deployment
+------------------------
+
+#It is one of the mostly used application release model
+
+#It reduces risk and minimizes downtime of the application
+
+#In this model , we will have two environments:
+Blue (Old / Existing Version)
+Green (Latest Version)
+
+#Due to this release model , it will give good confidence to the developers whenever they want to release a new application changes
+---------------------------------------
+
+---------------------------------------
+ConfigMap & Secrets
+-======================
+We should not hard code enviroment properties in any application.
+
+#Using ConfigMap & Secrets we can pass enviroment specific properties for our application dynamically or in runtime.
+
+#ConfigMap & Secret concepts are used to avoid hard coded properties in any application.
+
+#We can make our application loosely coupled from enviroment properties by using ConfigMap & Secret.
+
+#ConfigMap & Secret will represent the data in key-value format
+
+#ConfigMap is used to store non-confidential data and Secret is used to store confidential data like password, pin , security code etc.
+
+--------------------------
+
+Prometheus - Kubernetes Cluster Monitering Tool
+-------------------------------------------------
+
+We can monitor the Kubernetes Cluster and cluster components using Prometheus monitoring tool.
+
+#Prometheus is an open source system monitoring and alerting tool.
+
+#Prometheus collects and stores the metrics in a particular time series.
+ 
+
+Grafana
+==========
+#Grafana is an analysis and monitoring tool
+
+#Grafana is a multi-platform open source analytics and interactive visualization web application
+
+#It provides charts, graphs for the web when connected to supported data sources.
+
+#By default Grafana will connect with Prometheus for data source
+--------------------------------------------------
+
+Helm Charts => Package Manager
+============
+
+Amazon Linux: yum
+Ubuntu: apt
+
+#HELM is a package manager for Kubernetes Cluster
+
+#HELM is used to install required softwares in Kubernetes cluster
+
+#HELM will maintain Charts in chart repository
+
+#Chart means collection of configuration files organized in a directory
+
+--------------------------------------
+
+HELM Installation
+--------------------
+Path to install HELM:
+https://helm.sh/docs/intro/install/
+
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+
+=====================================
+Deploy React Application using Helm:
+
+To see list of Helm charts:
+helm list -a
+
+$helm create react-app
+$cd react-app
+$vi values.yaml
+Copy and paste from Docker hub:  madandevops2024/react-app
+Under Image:
+image:
+  repository: madandevops2024/react-app
+  
+  
+service:
+  type: NodePort
+  
+$react-app/cd templates  
+$react-app/templates/vi deployment.yaml
+
+Under Containers section:
+
+containers:
+  ports:
+    containerPort: 3000
+	
+***
+Remove || part in "image:"
+Remove "liveProbe" for lines.
+
+-----------
+$react-app/templates/cd ..
+$react-app/vi Charts.yml
+
+*** Comment last line "appversion:..."
+---------
+
+$react-app/cd ..
+$helm install my-react-app react-app
+$kubectl get all
+
+Check NodePort Port and add it in security group.
+Check on which node the app is running.
+Copy Public IP of that node
+<public IP>:Nodeport (Enter)
+
+Uninstall App
+$helm uninstall my-react-app
+
+$kubectl get all
+
+To upgrade Helm chart:
+helm upgrade <running chart name> <chart name (blue print)>
+helm upgrade reactpage reactapp
+-------------------------------------
+
+Install Prometheus & Grafana in Kubernetes Cluster using Helm
+---------------------------------------------------------------
+#Add the latest helm repository  in Kubernetes
+$helm repo add stable https://charts.helm.sh/stable
+
+#Add Prometheus repo to helm
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+#Update Help repo
+$helm repo update 
+
+#Install Prometheus
+$helm install stable prometheus-community/kube-prometheus-stack
+
+#Get all PODs
+$kubectl get pods
+
+#Get the Services
+$kubectl get svc
+
+-----------------------------
+#By default Prometheus and Grafana services are available within the cluster as ConfigMap. To access them externally , we have to modify 2 service files from ClusterIP to NodePort or LoadBalancer.
+
+#Edit Prometheus Service & change service type to LoadBalancer.
+$kubectl edit svc stable-kube-prometheus-sta-prometheus
+
+#Edit Grafana Service & change service type to LoadBalancer.
+$kubectl edit svc stable-grafana
+
+#Access Prometheus Dashboard:
+
+http://<load balancer DNS URL>:9090
+
+#Access Grafana Dashboard:
+
+http://<load balancer DNS URL>
+
+User name: admin
+Password: prom-operator
+
+-----------------------------
+Autoscaling (of Pods)
+------------------------
+Visit: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+
+#It is the process of scale up or scale down of pods based on the demand.
+
+Autoscaling  can be done in 2 ways:
+
+1)Horizontal Scaling
+2)Vertical Scaling
+
+Horizontal scaling means increasing number of instances or servers.
+
+Vertical scaling means increasing capacity of a single system
+
+----------------------------------------------------
+HPA - Horizontal Pod Autoscaling
+VPA - Vertical Pod Autoscaling
+
+HPA: HPA which will scale up or down the number of pod replicas of Deployment, ReplicaSet or ReplicationController dynamically based on the metrics i.e., CPU or memory utilization.
+
+HPA will interact with Metric Server to identify the CPU utilization of POD
+
+#Metric Server is an application that collects the metrics from objects such as Pods, nodes according to the state of CPU, RAM and keeps observing these metrics.
+
+Deploy below metrics files into Kubernetes Cluster:
+https://github.com/madandevops2024/Kubernetes/tree/main/MetricServer
+
+Deploy below HPA sample files into Kubernetes Cluster:
+https://github.com/madandevops2024/Kubernetes/tree/main/HorizontalPodAutoscaler
+
+To increase the load:
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://hpa-demo-deployment; done"
+
+--------------------------------------------
