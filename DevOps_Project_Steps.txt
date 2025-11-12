@@ -1,0 +1,153 @@
+Project Setup:
+====================
+Always Run Commands as a "Root User"
+
+1) Create EC2 Instance (Amazon Linux, t2.micro) for EKS Hosting
+Refer: EKS Creation steps file.
+
+2) Create EC2 Instance (Ubuntu, t2.medium) for installing Jenkins
+https://www.jenkins.io/doc/book/installing/linux/#debianubuntu
+
+3) Create a EC2 Instance (Amazon Linux, t2.micro) and install Docker
+yum install docker -y
+service docker start 
+
+4) Create EC2 instance (Amazon Linux, t2.medium) to install Ansible Server
+yum install ansible -y
+
+5) Create new user: admin-user on Docker, Eks-host and Ansible servers
+
+Ansible
+useradd: admin-user
+passwd admin-user (Enter)
+admin
+
+Docker
+useradd: admin-user
+passwd admin-user (Enter)
+admin
+
+Eks-host Server:
+useradd: admin-user
+passwd admin-user (Enter)
+admin
+
+6) On Ansible, create 'workloads' folder inside user account : 'admin-user'
+
+7) On Ansible, install  java version 17:
+sudo -i
+sudo yum install java-17-amazon-corretto -y
+
+8)On Ansible, add root privilages for the user 'admin-user' inside 'visudo' file:
+root    ALL=(ALL:ALL) ALL
+admin-user    ALL=(ALL:ALL) ALL
+
+9)Do below changes on Ansible server only (As we need to connect from Jenkins to Ansible Server with Credentials)
+vi /etc/ssh/sshd_config
+Change: PasswordAuthentication yes
+
+10)Reload sshd service on Ansible server
+service sshd reload
+
+11) On Docker Server add admin-user to docker group:
+usermod -aG docker admin-user
+
+====================================================================
+13)On both Eks-host and Docker servers, switch to 'admin-user' account:
+a) su - admin-user
+b) Create a folder: '.ssh'
+c) Create a file inside '.ssh': 'authorized_keys'
+
+12) On Ansible server, switch to 'admin-user' account
+a) su - admin-user
+b) Create a folder: '.ssh'
+c) Execute: ssh-keygen
+d) Copy id_rsa.pub content and paste on both Docker and Eks-host servers at location:
+'admin-user>.ssh/authorized_keys
+
+e)
+sudo -i
+vi /etc/ansible/hosts
+
+------------------------
+[docker]
+Private IP
+
+[eks]
+Private IP
+------------------------
+
+f) On Ansible Server:
+1)Switch to admin-user
+su - admin-user
+2)ansible docker -m ping
+3)ansible eks -m ping
+
+==========================================
+
+14)Create new node on Jenkins Server:
+ansible-node
+
+15)
+Label Name: ansible-node-label
+
+Take below path from Ansible Workloads
+Home Directory: /home/admin-user/workloads
+
+Usage: Only Build jobs with Label Expressions matching this node
+
+Launch method: Launch agents via SSH
+
+Host IP: Ansible Public IP
+
+Credentials:
+username: admin-user
+passwd: admin
+
+Host Key Verification Strategy: Manually Trusted key verification Strategy
+
+Availability: keep this agent online as much as possible
+
+Save & Refresh
+-------------------------------------
+
+16) Install Maven plugin on Jenkins
+
+17)Create a Pipeline Job:
+ShoppingSite
+
+18)Inside the Pipeline Configuration, 
+Add GitHub repo details:
+Pipeline:
+Definition:
+Pipeline Script from SCM
+https://github.com/devopsengineer30/Shopping-site.git
+
+Add branch name as 'master'
+select  SCM (script) path : Jenkinsfile_Project
+
+Apply & Save
+==========================================================================================
+19) On Docker server, 'docker login' after switching to user account i.e., 'admin-user'
+a)su - admin-user
+b)docker login
+Enter Docker hub Credentials 
+
+20)On EKS Server:
+su - admin-user (If you are already a 'admin-user', do not run this command)
+kubectl get nodes   => Expectation: Should not display the nodes
+
+21)
+Run below command if no nodes are displayed:
+
+aws eks update-kubeconfig --name <cluster_name>
+
+22)kubectl get nodes => Expectation: Should display the nodes
+
+23) Build job in Jenkins
+
+24) On EKS Server  => to check
+kubectl get all
+
+
+
